@@ -1,0 +1,11 @@
+**/.Rproj.user/
+**/.Rhistory
+**/*.Rproj
+
+.idea/
+.snakemake/
+.vscode/
+.DS_Store
+
+.gitignore
+
