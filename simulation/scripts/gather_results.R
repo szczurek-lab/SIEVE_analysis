@@ -1116,11 +1116,11 @@ rm(
 # For facets
 cell.num.labels <- c("40 cells", "100 cells")
 names(cell.num.labels) <- c("40", "100")
-allelic.raw.var <- factor(c(
-  "High coverage\nLow variance",
-  "High coverage\nMedium variance",
-  "Low coverage\nHigh variance"
-))
+allelic.raw.var <- c(
+  "High mean\nLow variance",
+  "High mean\nMedium variance",
+  "Low mean\nHigh variance"
+)
 names(allelic.raw.var) <- c("2", "10", "20")
 
 # process columns
@@ -1485,9 +1485,9 @@ common.legend <- list(
 
 data_quality_legend <- list(
   quality = c(
-    "High coverage\nLow variance",
-    "High coverage\nMedium variance",
-    "Low coverage\nHigh variance"
+    "High mean\nLow variance",
+    "High mean\nMedium variance",
+    "Low mean\nHigh variance"
   ),
   color = common.legend$color[1L:3L],
   fill = common.legend$fill[1L:3L]
@@ -2054,7 +2054,7 @@ wildtype.overdispersion.plot <- ggplot(
     size = 1 / .pt
   ) +
   labs(
-    y = "Wild type overdispersion",
+    y = "Wildtype overdispersion",
     x = "Mutation rate"
   ) +
   theme_bw() +
@@ -3122,7 +3122,7 @@ true.homo.ref.as.hetero.mu.in.called.pos.plot <- ggplot(
     size = 1 / .pt
   ) +
   labs(
-    y = "Proportion of true homozygous reference in predicted single mutant genotype",
+    y = "Proportion of true wildtype genotype in predicted single mutant genotype",
     x = "Mutation rate"
   ) +
   theme_bw() +
