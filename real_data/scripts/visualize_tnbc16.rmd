@@ -9,15 +9,26 @@ output:
 
 ## Constants
 ```{r}
-PREFIX <- "../tnbc16/improved"
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
+SIEVE_PREFIX <- "../tnbc16/improved"
+ALT_PREFIX <- "../tnbc16/all_methods"
+
 CELL_ORIGIN <- NULL
 PLOT_BRANCH_LENGTH <- TRUE
 PLOT_HPD <- TRUE
 SCALE_LONGEST_BRANCH <- 3
 
-SIEVE_VCF <- paste(PREFIX, "geneannotator/sieve_vcf.rds", sep = "/")
+CELLPHY_TREE <- paste(ALT_PREFIX, "cellphy", "tnbc16.raxml.bestTree.nexus", sep = "/")
+SCIPHI_TREE <- paste(ALT_PREFIX, "sciphi", "tnbc16", "best_index", "tree.nexus", sep = "/")
+SIFIT_TREE <- paste(ALT_PREFIX, "sifit", "data_mlTree.newick", sep = "/")
+
+NRF_DIST <- paste(ALT_PREFIX, "nrf.tsv", sep = "/")
+BS_DIST <- paste(ALT_PREFIX, "bs.tsv", sep = "/")
+
+SIEVE_VCF <- paste(SIEVE_PREFIX, "geneannotator/sieve_vcf.rds", sep = "/")
 MONOVAR <- "../tnbc16/tnbc16_monovar.vcf.gz"
-MONOVAR_VCF <- paste(PREFIX, "geneannotator/monovar_filtered_vcf.rds", sep = "/")
+MONOVAR_VCF <- paste(SIEVE_PREFIX, "geneannotator/monovar_filtered_vcf.rds", sep = "/")
 ```
 
 ## Load helper functions
@@ -29,7 +40,7 @@ source(file = "real_data_visualization.R")
 
 ### Load local tree and get tips
 ```{r}
-tree <- read.beast(paste(PREFIX, "geneannotator/annotated.tree", sep = "/"))
+tree <- read.beast(paste(SIEVE_PREFIX, "geneannotator/annotated.tree", sep = "/"))
 
 tip.df <- get.tip.info(tree, pat2names = CELL_ORIGIN)
 
@@ -60,7 +71,7 @@ mark.complex.genes <- list(
 )
 gene.dup.gene.sep <- " \U00D7 "
 gene.sep.criterion <- tibble(
-    num = c(10, 20, 40, 60, 80, 100, 120, 150, 200, 250, 300),#c(5, 10, 15, 20, 30, 40, 50, 100, 150, 200, 250, 300),
+    num = c(10, 20, 40, 60, 80, 100, 120, 150, 200, 250, 300),
     group = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
   )
 gene.sep.collapse <- ","
@@ -126,9 +137,9 @@ if (PLOT_HPD) {
     label.repel.box.padding = unit(0.1, "lines"),
     label.repel.label.r = unit(0.1, "lines"),
     label.repel.label.size = unit(0.15, "mm"),
-    anno.posterior = FALSE,
+    anno.support = FALSE,
     seed = 1L,
-    out.file = paste(PREFIX, "geneannotator/tree_HPD.pdf", sep = "/"),
+    out.file = paste(SIEVE_PREFIX, "geneannotator/tree_HPD.pdf", sep = "/"),
     out.format = tree.out.format,
     out.width = 183,
     out.height = 80,
@@ -159,14 +170,14 @@ tree.plot <- plot.nodes(
   tip.label.color = tip.label.color,
   x.limit = c(0, 0.00003515),
   legend.spacing = legend.spacing,
-  legend.pos = c(0, 0.6), #c(0.68, 0.082)
+  legend.pos = c(0, 0.6),
   legend.just = c("left", "top"),
   legend.direction = "vertical",
   legend.key.size = legend.key.size,
   legend.text.size = legend.text.size,
   lengend.title.size = lengend.title.size,
   plot.margin = unit(c(0, 0, 0, 0), "mm"),
-  posterior.threshold = 0.5,
+  support.threshold = 0.5,
   internal.node.text.size = 6 / .pt,
   internal.node.label.padding = unit(0.1, "lines"),
   internal.node.label.r = unit(0.1, "lines"),
@@ -204,7 +215,7 @@ tree.plot.1 <- plot.genes(
   text.color.type = gene.text.color.type, # "fill" or "color" / "colour"
   direction = "both",
   seed = 500L,
-  out.file = paste0(PREFIX, "/geneannotator/tree_all.pdf"),
+  out.file = paste0(SIEVE_PREFIX, "/geneannotator/tree_all.pdf"),
   out.format = tree.out.format,
   out.width = 183,
   out.height = 247,
@@ -239,7 +250,7 @@ tree.plot.1
 #   repel.type = gene.repel.type, # "label" or "text"
 #   text.color.type = gene.text.color.type, # "fill" or "color" / "colour"
 #   seed = 2000L,
-#   out.file = paste0(PREFIX, "/geneannotator/tree_isa.pdf"),
+#   out.file = paste0(SIEVE_PREFIX, "/geneannotator/tree_isa.pdf"),
 #   out.format = tree.out.format,
 #   out.width = 183,
 #   out.height = 247,
@@ -274,7 +285,7 @@ tree.plot.1
 #   repel.type = gene.repel.type, # "label" or "text"
 #   text.color.type = gene.text.color.type, # "fill" or "color" / "colour"
 #   seed = 10L,
-#   out.file = paste0(PREFIX, "/geneannotator/tree_fsa.pdf"),
+#   out.file = paste0(SIEVE_PREFIX, "/geneannotator/tree_fsa.pdf"),
 #   out.format = tree.out.format,
 #   out.width = 180,
 #   out.height = 130,
@@ -284,6 +295,136 @@ tree.plot.1
 # tree.plot.3
 ```
 
+### Visualize trees inferred by other methods
+
+1. CellPhy
+```{r}
+cellphy_tree <- read.beast(CELLPHY_TREE)
+cellphy_tree@data$bootstrap <- normalize.support(cellphy_tree@data$bootstrap)
+cellphy_tree.plot <- get.ggtree(
+  cellphy_tree,
+  plot.branch.length = PLOT_BRANCH_LENGTH,
+  branch.size = tree.branch.size,
+  scale.longest.branch = 1
+)
+cellphy_tree.plot <- plot.nodes(
+  tree.plot = cellphy_tree.plot,
+  tip.data = tip.df,
+  tip.point.size = tip.point.size,
+  tip.label.align = tip.label.align,
+  tip.label.linetype = tip.label.linetype,
+  tip.label.linesize = tip.label.linesize,
+  tip.label.offset = 0.01,
+  tip.label.size = tip.label.size,
+  tip.label.legend.title = tip.label.legend.title,
+  tip.label.color = tip.label.color,
+  x.limit = c(0, 0.29),
+  legend.spacing = legend.spacing,
+  legend.pos = c(0, 0.6),
+  legend.just = c("left", "top"),
+  legend.direction = "vertical",
+  legend.key.size = legend.key.size,
+  legend.text.size = legend.text.size,
+  lengend.title.size = lengend.title.size,
+  plot.margin = unit(c(0, 0, 0, 0), "mm"),
+  support.var = "bootstrap",
+  support.threshold = 0.5,
+  internal.node.text.size = 6 / .pt,
+  internal.node.label.padding = unit(0.1, "lines"),
+  internal.node.label.r = unit(0.1, "lines"),
+  internal.node.label.size = unit(0.15, "mm"),
+  internal.node.label.alpha = 1.0,
+  internal.node.label.fill.color = "white",
+  out.file = paste0(SIEVE_PREFIX, "/geneannotator/cellphy_tree.pdf"),
+  out.format = tree.out.format,
+  out.width = 85,
+  out.height = 100,
+  out.dpi = tree.out.dpi,
+  out.limitsize = tree.out.limitsize
+)
+cellphy_tree.plot
+```
+
+2. SCIPhI
+```{r}
+sciphi_tree <- read.beast(SCIPHI_TREE)
+sciphi_tree.plot <- get.ggtree(
+  sciphi_tree,
+  plot.branch.length = FALSE,
+  branch.size = tree.branch.size,
+  scale.longest.branch = 1
+)
+sciphi_tree.plot <- plot.nodes(
+  tree.plot = sciphi_tree.plot,
+  tip.data = tip.df,
+  tip.point.size = tip.point.size,
+  tip.label.align = tip.label.align,
+  tip.label.linetype = tip.label.linetype,
+  tip.label.linesize = tip.label.linesize,
+  tip.label.offset = 0.4,
+  tip.label.size = tip.label.size,
+  tip.label.legend.title = tip.label.legend.title,
+  tip.label.color = tip.label.color,
+  x.limit = c(0, 8.5),
+  legend.spacing = legend.spacing,
+  legend.pos = c(0, 0.6),
+  legend.just = c("left", "top"),
+  legend.direction = "vertical",
+  legend.key.size = legend.key.size,
+  legend.text.size = legend.text.size,
+  lengend.title.size = lengend.title.size,
+  plot.margin = unit(c(0, 0, 0, 0), "mm"),
+  anno.support = FALSE,
+  out.file = paste0(SIEVE_PREFIX, "/geneannotator/sciphi_tree.pdf"),
+  out.format = tree.out.format,
+  out.width = 85,
+  out.height = 100,
+  out.dpi = tree.out.dpi,
+  out.limitsize = tree.out.limitsize
+)
+sciphi_tree.plot
+```
+
+3. SiFit
+```{r}
+sifit_tree <- read.newick(SIFIT_TREE)
+sifit_tree.plot <- get.ggtree(
+  as.treedata(sifit_tree),
+  plot.branch.length = PLOT_BRANCH_LENGTH,
+  branch.size = tree.branch.size,
+  scale.longest.branch = 1
+)
+sifit_tree.plot <- plot.nodes(
+  tree.plot = sifit_tree.plot,
+  tip.data = tip.df,
+  tip.point.size = tip.point.size,
+  tip.label.align = tip.label.align,
+  tip.label.linetype = tip.label.linetype,
+  tip.label.linesize = tip.label.linesize,
+  tip.label.offset = 0.1,
+  tip.label.size = tip.label.size,
+  tip.label.legend.title = tip.label.legend.title,
+  tip.label.color = tip.label.color,
+  x.limit = c(0, 1.98),
+  legend.spacing = legend.spacing,
+  legend.pos = c(0, 0.6),
+  legend.just = c("left", "top"),
+  legend.direction = "vertical",
+  legend.key.size = legend.key.size,
+  legend.text.size = legend.text.size,
+  lengend.title.size = lengend.title.size,
+  plot.margin = unit(c(0, 0, 0, 0), "mm"),
+  anno.support = FALSE,
+  out.file = paste0(SIEVE_PREFIX, "/geneannotator/sifit_tree.pdf"),
+  out.format = tree.out.format,
+  out.width = 85,
+  out.height = 100,
+  out.dpi = tree.out.dpi,
+  out.limitsize = tree.out.limitsize
+)
+sifit_tree.plot
+```
+
 ## Visualize genotype heatmap
 
 ### Load data from VCF files
@@ -291,7 +432,7 @@ tree.plot.1
 if (is.null(SIEVE_VCF) || !file.exists(SIEVE_VCF)) {
   sieveVCF <- loadVcf(
     file = paste(
-      PREFIX,
+      SIEVE_PREFIX,
       "results/stage2/variant_calling_dir/none_univ_ormc-fels_fixed_2_ormc/none_univ_ormc-fels_fixed_2_ormc_median.vcf",
       sep = "/"
     ),
@@ -313,7 +454,7 @@ if(!is.null(MONOVAR)) {
       included.cells = colnames(sieveVCF),
       included.sites = rownames(sieveVCF),
       destination.file = paste(
-        PREFIX,
+        SIEVE_PREFIX,
         "../monovar_filtered.vcf",
         sep = "/"
       ),
@@ -322,6 +463,12 @@ if(!is.null(MONOVAR)) {
     )
   } else
     monovarVCF <- readRDS(MONOVAR_VCF)
+
+  convert2sifit(
+    vcf = monovarVCF,
+    SIEVE_PREFIX = paste(SIEVE_PREFIX, "../for_sifit", sep = "/"),
+    binary = FALSE
+  )
 }
 ```
 
@@ -333,15 +480,17 @@ ht_opt(
   "verbose" = TRUE
 )
 
-out.hm.width <- 105 # mm
-out.hm.height <- 39 # mm
+out.gt.hm.width <- 105 # mm
+out.gt.hm.height <- 39 # mm
+out.tool.hm.width <- 80 # mm
+out.tool.hm.height <- 80 # mm
 in2mm <- 25.4
 
 gpar.title <- gpar(fontsize = 7L, fontfamily = "sans")
 gpar.title.2 <- gpar(fontsize = 7L, fontfamily = "sans")
 gpar.text <- gpar(fontsize = 6L, fontfamily = "sans")
 
-color.hm <- get.hm.color(i = 2)
+color.gt.hm <- get.gt.hm.color(i = 2)
 hm.row.title <- "Cells"
 hm.row.title.side <- "left"
 hm.row.title.gp <- gpar.title.2
@@ -351,6 +500,9 @@ hm.column.title.gp <- gpar.title.2
 hm.row.order <- ordered.tips
 hm.row.names.side <- "left"
 hm.row.names.gp <- gpar.text
+hm.col.names.side <- "bottom"
+hm.col.names.gp <- gpar.text
+hm.col.names.rot <- 45
 ```
 
 ### Genotype heatmap from Sieve
@@ -361,7 +513,7 @@ sieve.gt.legend <- get.legend(sieve.gt.data, is.ado = FALSE)
 
 sieve.gt.hm <- Heatmap(
   t(sieve.gt.data),
-  col = color.hm,
+  col = color.gt.hm,
   row_title = hm.row.title,
   row_title_side = hm.row.title.side,
   row_title_gp = hm.row.title.gp,
@@ -421,15 +573,15 @@ gt.key.sites <- columnAnnotation(
 sieve.gt.hm.column.order <- rownames(sieveVCF)[sieve.gt.hm.column.order]
 
 cairo_pdf(
-    paste(PREFIX, "geneannotator/gt_sieve.pdf", sep = "/"),
-    width = out.hm.width / in2mm,
-    height = out.hm.height / in2mm,
+    paste(SIEVE_PREFIX, "geneannotator/gt_sieve.pdf", sep = "/"),
+    width = out.gt.hm.width / in2mm,
+    height = out.gt.hm.height / in2mm,
     onefile = FALSE
-    )
+)
 
 sieve.gt.hm <- Heatmap(
   t(sieve.gt.data),
-  col = color.hm,
+  col = color.gt.hm,
   row_title = hm.row.title,
   row_title_side = hm.row.title.side,
   row_title_gp = hm.row.title.gp,
@@ -475,7 +627,7 @@ Cells are ordered according to the above tree, and sites are ordered with a spec
 #
 # # sieve.ado.hm <- Heatmap(
 # #   t(sieve.ado.data),
-# #   col = color.hm,
+# #   col = color.gt.hm,
 # #   row_title = hm.row.title,
 # #   row_title_side = hm.row.title.side,
 # #   row_title_gp = hm.row.title.gp,
@@ -534,15 +686,15 @@ Cells are ordered according to the above tree, and sites are ordered with a spec
 # # sieve.ado.hm.column.order <- rownames(sieveVCF)[sieve.ado.hm.column.order]
 #
 # cairo_pdf(
-#   paste(PREFIX, "geneannotator/ado_sieve.pdf", sep = "/"),
-#   width = out.hm.width / in2mm,
-#   height = out.hm.height / in2mm,
+#   paste(SIEVE_PREFIX, "geneannotator/ado_sieve.pdf", sep = "/"),
+#   width = out.gt.hm.width / in2mm,
+#   height = out.gt.hm.height / in2mm,
 #   onefile = FALSE
 # )
 #
 # sieve.ado.hm <- Heatmap(
 #   t(sieve.ado.data),
-#   col = color.hm,
+#   col = color.gt.hm,
 #   row_title = hm.row.title,
 #   row_title_side = hm.row.title.side,
 #   row_title_gp = hm.row.title.gp,
@@ -608,9 +760,9 @@ if(!is.null(MONOVAR)) {
     )
 
   cairo_pdf(
-    paste(PREFIX, "geneannotator/gt_monovar_sieve.pdf", sep = "/"),
-    width = out.hm.width / in2mm,
-    height = out.hm.height / in2mm,
+    paste(SIEVE_PREFIX, "geneannotator/gt_monovar_sieve.pdf", sep = "/"),
+    width = out.gt.hm.width / in2mm,
+    height = out.gt.hm.height / in2mm,
     onefile = FALSE
     )
 
@@ -619,7 +771,7 @@ if(!is.null(MONOVAR)) {
   
   monovar.hm <- Heatmap(
     t(monovar.gt.data),
-    col = color.hm,
+    col = color.gt.hm,
     row_title = hm.row.title,
     row_title_side = hm.row.title.side,
     row_title_gp = hm.row.title.gp,
@@ -670,8 +822,131 @@ saveRDS(
       names(sieve.gt.stats)
     )
   ),
-  paste(PREFIX, "geneannotator/gt_prop.rds", sep = "/")
+  paste(SIEVE_PREFIX, "geneannotator/gt_prop.rds", sep = "/")
 )
-readRDS(paste(PREFIX, "geneannotator/gt_prop.rds", sep = "/"))
-print(xtable(format(readRDS(paste(PREFIX, "geneannotator/gt_prop.rds", sep = "/")), digits = 3L, scientific = TRUE), type = "latex"))
+readRDS(paste(SIEVE_PREFIX, "geneannotator/gt_prop.rds", sep = "/"))
+print(xtable(format(readRDS(paste(SIEVE_PREFIX, "geneannotator/gt_prop.rds", sep = "/")), digits = 3L, scientific = TRUE), type = "latex"))
+```
+
+### Heatmap of tree distances
+
+1. Normalized Robinson-Foulds
+```{r}
+cairo_pdf(
+    paste(SIEVE_PREFIX, "geneannotator/nrf.pdf", sep = "/"),
+    width = out.tool.hm.width / in2mm,
+    height = out.tool.hm.height / in2mm,
+    onefile = FALSE
+)
+
+nrf.mat <- as.matrix(read.table(NRF_DIST, header = TRUE, sep = "\t"))
+nrf.mat <- nrf.mat[2:dim(nrf.mat)[1], 1:(dim(nrf.mat)[2] - 1)]
+
+nrf.hm <- Heatmap(
+  nrf.mat,
+  rect_gp = gpar(type = "none"),
+  col = circlize::colorRamp2(
+    c(0, 0.5, 1),
+    c("blue", "white", "red")
+  ),
+  cell_fun = function(j, i, x, y, width, height, fill) 
+  {
+    if (i >= j) {
+      grid.rect(x, y, width, height, gp = gpar(fill = fill, col = fill))
+      grid.text(
+        sprintf("%.2f", nrf.mat[i, j]),
+        x,
+        y,
+        gp = gpar.text
+      )
+    }
+  },
+  name = "Normalised Robinson-Foulds distance",
+  row_names_side = hm.row.names.side,
+  row_names_gp = hm.row.names.gp,
+  row_names_centered = TRUE,
+  cluster_rows = FALSE,
+  cluster_columns = FALSE,
+  column_names_side = hm.col.names.side,
+  column_names_gp = hm.col.names.gp,
+  column_names_rot = hm.col.names.rot,
+  column_names_centered = TRUE,
+  heatmap_legend_param = list(
+    at = c(0, 0.25, 0.5, 0.75, 1),
+    grid_height = unit(3, "mm"),
+    grid_width = unit(3, "mm"),
+    border = "black",
+    title_gp = gpar.title,
+    labels_gp = gpar.text,
+    legend_direction = "horizontal"
+  ),
+  use_raster = FALSE
+)
+
+draw(
+  nrf.hm,
+  heatmap_legend_side = "bottom"
+)
+
+dev.off()
+```
+
+2. Rooted branch score
+```{r}
+cairo_pdf(
+    paste(SIEVE_PREFIX, "geneannotator/bs.pdf", sep = "/"),
+    width = out.tool.hm.width / in2mm,
+    height = out.tool.hm.height / in2mm,
+    onefile = FALSE
+)
+
+bs.mat <- as.matrix(read.table(BS_DIST, header = TRUE, sep = "\t"))
+bs.mat <- bs.mat[2:dim(bs.mat)[1], 1:(dim(bs.mat)[2] - 1)]
+
+rbs.hm <- Heatmap(
+  bs.mat,
+  rect_gp = gpar(type = "none"),
+  col = circlize::colorRamp2(
+    c(0, ceiling(max(bs.mat)) / 2, ceiling(max(bs.mat))),
+    c("blue", "white", "red")
+  ),
+  cell_fun = function(j, i, x, y, width, height, fill) 
+  {
+    if (i >= j) {
+      grid.rect(x, y, width, height, gp = gpar(fill = fill, col = fill))
+      grid.text(
+        sprintf("%.2f", bs.mat[i, j]),
+        x,
+        y,
+        gp = gpar.text
+      )
+    }
+  },
+  name = "Branch score distance",
+  row_names_side = hm.row.names.side,
+  row_names_gp = hm.row.names.gp,
+  row_names_centered = TRUE,
+  cluster_rows = FALSE,
+  cluster_columns = FALSE,
+  column_names_side = hm.col.names.side,
+  column_names_gp = hm.col.names.gp,
+  column_names_rot = hm.col.names.rot,
+  column_names_centered = TRUE,
+  heatmap_legend_param = list(
+    grid_height = unit(3, "mm"),
+    grid_width = unit(3, "mm"),
+    border = "black",
+    title_gp = gpar.title,
+    labels_gp = gpar.text,
+    legend_direction = "horizontal"
+  ),
+  use_raster = FALSE
+)
+
+draw(
+  rbs.hm,
+  heatmap_legend_side = "bottom"
+)
+
+dev.off()
 ```

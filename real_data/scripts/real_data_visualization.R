@@ -101,14 +101,20 @@ get.ggtree <- function(
   if (plot.branch.length) {
     branch.length <- "branch.length"
 
-    tree@data <- tree@data %>%
-        mutate(ori_length = length)
+    if ("length" %in% colnames(tree@data)) {
+      tree@data <- tree@data %>%
+          mutate(ori_length = length)
+    }
 
     if (scale.longest.branch > 1) {
       branch.lengths <- sort(tree@phylo$edge.length, decreasing = TRUE)
-      message(paste0("Threshold of bran length: ", branch.lengths[scale.longest.branch]))
-      tree@data <- tree@data %>%
-        mutate(length = if_else(as.numeric(length) > branch.lengths[scale.longest.branch], as.character(branch.lengths[scale.longest.branch]), length))
+      message(paste0("Threshold of branch length: ", branch.lengths[scale.longest.branch]))
+
+      if ("length" %in% colnames(tree@data)) {
+        tree@data <- tree@data %>%
+          mutate(length = if_else(as.numeric(length) > branch.lengths[scale.longest.branch], as.character(branch.lengths[scale.longest.branch]), length))
+      }
+
       tree@phylo$edge.length[tree@phylo$edge.length > branch.lengths[scale.longest.branch]] <- branch.lengths[scale.longest.branch]
     }
   } else {
@@ -133,6 +139,17 @@ get.ggtree <- function(
     )
 
   tree.plot
+}
+
+
+normalize.support <- function(vals) {
+  sapply(
+    vals,
+    function(x) {
+      ifelse(grepl("\\d+", x), as.character(as.numeric(x) / 100), "")
+    },
+    USE.NAMES = FALSE
+  )
 }
 
 
@@ -192,8 +209,9 @@ plot.nodes <- function(
   label.repel.box.padding = unit(0.1, "lines"),
   label.repel.label.r = unit(0.1, "lines"),
   label.repel.label.size = unit(0.15, "mm"),
-  anno.posterior = TRUE,
-  posterior.threshold = 0.5,
+  anno.support = TRUE,
+  support.var = "posterior",
+  support.threshold = 0.5,
   internal.node.text.size = 5,
   internal.node.label.padding = unit(0.1, "lines"),
   internal.node.label.r = unit(0.1, "lines"),
@@ -322,6 +340,10 @@ plot.nodes <- function(
         fill = branch.length.color,
         alpha = branch.length.alpha,
         segment.size = 1 / .pt,
+        # arrow = arrow(
+        #   length = label.repel.arrow.length,
+        #   type = "open"
+        # ),
         force = label.repel.force,
         force_pull = label.repel.force_pull,
         max.overlaps = label.repel.max.overlaps,
@@ -334,14 +356,14 @@ plot.nodes <- function(
       )
   }
 
-  if (anno.posterior) {
+  if (anno.support) {
     ret.plot <- ret.plot +
       geom_label2(
         aes(
           x = x,
           y = y,
-          label = format(round(as.numeric(posterior), 2), nsmall = 2),
-          subset = as.numeric(posterior) > posterior.threshold
+          label = format(round(as.numeric(get(support.var)), 2), nsmall = 2),
+          subset = as.numeric(get(support.var)) > support.threshold
         ),
         size = internal.node.text.size,
         label.padding = internal.node.label.padding,
@@ -407,7 +429,7 @@ get.ordered.tip.names <- function(tree) {
   ),
   collapse = "  "
 ) {
-  if (is.na(x)) return(NA)
+  if (all(is.na(x))) return(NA)
 
   .x <- tibble(ori = sort(x)) %>%
     group_by(ori) %>%
@@ -449,13 +471,17 @@ get.ordered.tip.names <- function(tree) {
 .extract.genes <- function(
   tree.plot,
   mark.complex.genes = TRUE,
-  complex.genes = NULL,
+  complex.genes = list(
+    data = NULL,
+    et = "event_type_fsa",
+    ge = "gene_fsa"
+  ),
   .names = list(
-      et = "event_type",
-      eet = "expanded_event_type",
-      ge = "gene",
-      cg = "collapsed_gene"
-    ),
+    et = "event_type",
+    eet = "expanded_event_type",
+    ge = "gene",
+    cg = "collapsed_gene"
+  ),
   dup.gene.sep = " \U00D7 ",
   criterion = tibble(
     num = c(10, 20, 30, 40, 50, 60, 70, 80, 90, 100),
@@ -463,34 +489,62 @@ get.ordered.tip.names <- function(tree) {
   ),
   collapse = "  "
 ) {
-  df <- separate_rows(tree.plot$data, !!as.name(.names$et), !!as.name(.names$ge), sep = "; ") %>%
-    mutate(!!as.name(.names$et) := case_when(
-      grepl("^SM$", !!as.name(.names$et), ignore.case = TRUE) & mark.complex.genes & !is.null(complex.genes) & !!as.name(.names$ge) %in% complex.genes ~ "SMFSA",
-      TRUE ~ !!as.name(.names$et)
-    )) %>%
+  df <- separate_rows(tree.plot$data, !!as.name(.names$et), !!as.name(.names$ge), sep = "; ")
+
+  if (mark.complex.genes & !is.null(complex.genes$data)) {
+    df <- df %>%
+      left_join(
+        complex.genes$data %>% mutate(is_parallel = TRUE),
+        by = c(setNames(nm = .names$et, complex.genes$et), setNames(nm = .names$ge, complex.genes$ge))
+      ) %>%
+      mutate(
+        !!as.name(.names$et) := case_when(
+          is.null(is_parallel) | !is_parallel ~ !!as.name(.names$et),
+          is_parallel ~ paste0("P", !!as.name(.names$et)),
+          TRUE ~ !!as.name(.names$et)
+        )
+      )
+  }
+
+  df <- df %>%
     group_by(node, !!as.name(.names$et)) %>%
-    mutate(!!as.name(.names$cg) := paste(.combine.duplicate.genes(
-      !!as.name(.names$ge),
-      sep = dup.gene.sep,
-      collapse = collapse,
-      criterion = criterion
-    ), collapse = "\n")) %>%
+    mutate(
+      !!as.name(.names$cg) := paste(
+        .combine.duplicate.genes(
+          !!as.name(.names$ge),
+          sep = dup.gene.sep,
+          collapse = collapse,
+          criterion = criterion
+        ),
+        collapse = "\n"
+      )
+    ) %>%
     select(parent, node, label, !!as.name(.names$et), isTip, x, y, branch, angle, !!as.name(.names$cg)) %>%
     unique() %>%
     drop_na(!!as.name(.names$et)) %>%
     mutate(!!as.name(.names$eet) := case_when(
       grepl("^SM$", !!as.name(.names$et), ignore.case = TRUE) ~ "Single mutation (0/0 -> 0/1)",
-      grepl("^SMFSA$", !!as.name(.names$et), ignore.case = TRUE) ~ "Parallel single mutation (0/0 -> 0/1)",
+      grepl("^PSM$", !!as.name(.names$et), ignore.case = TRUE) ~ "Parallel single mutation (0/0 -> 0/1)",
       grepl("^HoSDM$", !!as.name(.names$et), ignore.case = TRUE) ~ "Homozygous simultaneous double mutation (0/0 -> 1/1)",
+      grepl("^PHoSDM$", !!as.name(.names$et), ignore.case = TRUE) ~ "Parallel homozygous simultaneous double mutation (0/0 -> 1/1)",
       grepl("^HeSDM$", !!as.name(.names$et), ignore.case = TRUE) ~ "Heterozygous simultaneous double mutation (0/0 -> 1/1')",
+      grepl("^PHeSDM$", !!as.name(.names$et), ignore.case = TRUE) ~ "Parallel heterozygous simultaneous double mutation (0/0 -> 1/1')",
       grepl("^SB$", !!as.name(.names$et), ignore.case = TRUE) ~ "Single back mutation (0/1 -> 0/0)",
+      grepl("^PSB$", !!as.name(.names$et), ignore.case = TRUE) ~ "Parallel single back mutation (0/1 -> 0/0)",
       grepl("^DB$", !!as.name(.names$et), ignore.case = TRUE) ~ "Double back mutation (1/1 -> 0/0)",
+      grepl("^PDB$", !!as.name(.names$et), ignore.case = TRUE) ~ "Parallel double back mutation (1/1 -> 0/0)",
       grepl("^HoSMA$", !!as.name(.names$et), ignore.case = TRUE) ~ "Homozygous single mutation addition (0/1 -> 1/1)",
+      grepl("^PHoSMA$", !!as.name(.names$et), ignore.case = TRUE) ~ "Parallel homozygous single mutation addition (0/1 -> 1/1)",
       grepl("^HeSMA$", !!as.name(.names$et), ignore.case = TRUE) ~ "Heterozygous single mutation addition (0/1 -> 1/1')",
+      grepl("^PHeSMA$", !!as.name(.names$et), ignore.case = TRUE) ~ "Parallel heterozygous single mutation addition (0/1 -> 1/1')",
       grepl("^HoSSM$", !!as.name(.names$et), ignore.case = TRUE) ~ "Homozygous substitute single mutation (1/1' -> 1/1)",
+      grepl("^PHoSSM$", !!as.name(.names$et), ignore.case = TRUE) ~ "Parallel homozygous substitute single mutation (1/1' -> 1/1)",
       grepl("^HeSSM$", !!as.name(.names$et), ignore.case = TRUE) ~ "Heterozygous substitute single mutation (1/1 -> 1/1')",
+      grepl("^PHeSSM$", !!as.name(.names$et), ignore.case = TRUE) ~ "Parallel heterozygous substitute single mutation (1/1 -> 1/1')",
       grepl("^D$", !!as.name(.names$et), ignore.case = TRUE) ~ "Deletion",
+      grepl("^PD$", !!as.name(.names$et), ignore.case = TRUE) ~ "Parallel deletion",
       grepl("^I$", !!as.name(.names$et), ignore.case = TRUE) ~ "Insertion",
+      grepl("^PI$", !!as.name(.names$et), ignore.case = TRUE) ~ "Parallel insertion",
       TRUE ~ !!as.name(.names$et)
     ))
   df
@@ -515,7 +569,7 @@ get.color.for.genes <- function(name = "Spectral") {
 
 
 get.color.for.genes.2 <- function() {
-  .tmp <- c(brewer.pal(n = 2, name = "Paired")[2], brewer.pal(n = 8, name = "Dark2"), brewer.pal(n = 2, name = "Paired")[6])
+  .tmp <- c(brewer.pal(n = 3, name = "Paired")[2], brewer.pal(n = 8, name = "Dark2"), brewer.pal(n = 12, name = "Paired")[c(1, 3:12)])
   names(.tmp) <- c(
     "Single mutation (0/0 -> 0/1)",
     "Homozygous substitute single mutation (1/1' -> 1/1)",
@@ -526,7 +580,17 @@ get.color.for.genes.2 <- function() {
     "Homozygous single mutation addition (0/1 -> 1/1)",
     "Heterozygous single mutation addition (0/1 -> 1/1')",
     "Double back mutation (1/1 -> 0/0)",
-    "Heterozygous substitute single mutation (1/1 -> 1/1')"
+    "Heterozygous substitute single mutation (1/1 -> 1/1')",
+    "Parallel homozygous simultaneous double mutation (0/0 -> 1/1)",
+    "Parallel heterozygous simultaneous double mutation (0/0 -> 1/1')",
+    "Parallel single back mutation (0/1 -> 0/0)",
+    "Parallel double back mutation (1/1 -> 0/0)",
+    "Parallel homozygous single mutation addition (0/1 -> 1/1)",
+    "Parallel heterozygous single mutation addition (0/1 -> 1/1')",
+    "Parallel homozygous substitute single mutation (1/1' -> 1/1)",
+    "Parallel heterozygous substitute single mutation (1/1 -> 1/1')",
+    "Parallel deletion",
+    "Parallel insertion"
   )
   .tmp
 }
@@ -541,22 +605,25 @@ get.color.for.genes.2 <- function() {
   if (is.null(data[[as.name(et)]])) return(NULL)
 
   df <- separate_rows(data, !!as.name(et), !!as.name(ge), sep = "; ") %>%
-    select(!!as.name(et), !!as.name(ge)) %>%
+    select(node, !!as.name(et), !!as.name(ge)) %>%
+    unique() %>%
     drop_na()
 
   if (strict.mode) {
     df <- df %>%
-      group_by(!!as.name(ge)) %>%
-      mutate(include = !any(!!as.name(et) != "SM")) %>%
+      group_by(!!as.name(et), !!as.name(ge)) %>%
+      mutate(cnt = 1:n()) %>%
+      mutate(include = cnt > 1) %>%
       ungroup() %>%
       filter(include == TRUE) %>%
-      select(-include) %>%
+      select(-node, -cnt, -include) %>%
       unique()
   } else {
-    df %>% filter(!!as.name(et) == "SM") %>%
-    unique()
+    df <- df %>%
+      select(!!as.name(et), !!as.name(ge)) %>%
+      unique()
   }
-  df[[ge]]
+  df %>% select(!!as.name(et), !!as.name(ge))
 }
 
 
@@ -640,10 +707,19 @@ plot.genes <- function(
     complex.genes <- NULL
   }
 
+  if (!is.null(complex.genes)) {
+    message("Genes with parallel evolution:")
+    print.data.frame(complex.genes)
+  }
+
   data <- .extract.genes(
     tree.plot = tree.plot,
     mark.complex.genes$general,
-    complex.genes,
+    complex.genes = list(
+      data = complex.genes,
+      et = "event_type_fsa",
+      ge = "gene_fsa"
+    ),
     .names = .names,
     dup.gene.sep = dup.gene.sep,
     criterion = criterion,
@@ -680,6 +756,10 @@ plot.genes <- function(
         size = text.size,
         family = "sans",
         segment.size = 1 / .pt,
+        # arrow = arrow(
+        #   length = arrow.length,
+        #   type = arrow.type
+        # ),
         force = text.repel.force,
         force_pull = text.repel.force_pull,
         min.segment.length = text.repel.min.segment.length,
@@ -740,6 +820,544 @@ plot.genes <- function(
 
   ret.plot
 }
+
+
+# loadSamples <- function(
+#   file,
+#   num.cells,
+#   num.lines.to.read = 100L,
+#   burn.in = 0.1,
+#   gt.category = c("0/0", "0/1", "1/1", "1/2"),
+#   ado.category = c("0", "1"),
+#   cores = 4L,
+#   local.copy = NULL
+# ) {
+#   stopifnot(!is.null(file) && file.exists(file))
+#
+#   if (burn.in > 1.0 || burn.in < 0.0) burn.in <- 0.1
+#
+#   .gt.ado.sample.file <- file(file, "r")
+#   tryCatch(
+#     {
+#       f.lines <- readLines(.gt.ado.sample.file, n = 1L)
+#       sites <- tail(
+#         str_split(
+#           string = f.lines,
+#           pattern = "\t",
+#           simplify = TRUE
+#         )[1,],
+#         n = -1L
+#       )
+#
+#       num.sites <- length(sites)
+#       cell.names <- character()
+#       reach.site.map <- FALSE
+#       site.map <- character()
+#
+#       samples <- list()
+#
+#       while (TRUE) {
+#         f.lines <- readLines(.gt.ado.sample.file, n = num.lines.to.read)
+#         if (length(f.lines) == 0L) break
+#
+#         is.comment <- startsWith(x = f.lines, prefix = "#")
+#         f.lines.sample <- f.lines[!is.comment]
+#         f.lines.comment <- f.lines[is.comment]
+#
+#         if (length(f.lines.sample) > 0) {
+#           samples <- c(samples, pbapply(
+#             str_split(
+#               string = f.lines.sample,
+#               pattern = "\t",
+#               simplify = TRUE
+#             ),
+#             MARGIN = 1L,
+#             function(x) {
+#               parsed.f.lines <- str_split(
+#                 string = tail(
+#                   x,
+#                   n = -1L
+#                 ),
+#                 pattern = ";",
+#                 simplify = TRUE
+#               )
+#
+#               ret <- list(
+#                 gt = integer(length = num.sites * num.cells * length(gt.category)),
+#                 ado = integer(length = num.sites * num.cells * length(ado.category))
+#               )
+#
+#               for (i in seq_len(dim(parsed.f.lines)[1])) {
+#                 for (j in seq_len(dim(parsed.f.lines)[2])) {
+#                   .data <- str_split(
+#                     string = parsed.f.lines[i, j],
+#                     pattern = ",",
+#                     simplify = TRUE
+#                   )
+#
+#                   ret$gt[(i - 1) * num.cells * length(gt.category) + (j - 1) * length(gt.category) + match(.data[1], gt.category)] %+=% 1L
+#                   ret$ado[(i - 1) * num.cells * length(ado.category) + (j - 1) * length(ado.category) + match(.data[2], ado.category)] %+=% 1L
+#                 }
+#               }
+#
+#               return(ret)
+#             },
+#             cl = cores
+#           ))
+#         }
+#
+#         if (length(f.lines.comment) > 0) {
+#           if (reach.site.map)
+#             site.map <- c(site.map, .get.site.map(f.lines.comment))
+#           else {
+#             for (x in seq_len(length(f.lines.comment))) {
+#               if (reach.site.map) {
+#                 site.map <- c(site.map, .get.site.map(f.lines.comment[x:length(f.lines.comment)]))
+#                 break
+#               } else if (startsWith(f.lines.comment[x], "#Cells: ")) {
+#                 cell.names <- str_split(
+#                   string = sub(
+#                     pattern = "\\s",
+#                     replacement = "",
+#                     x = sub(
+#                       pattern = "^#Cells: ",
+#                       replacement = "",
+#                       x = f.lines.comment[x]
+#                     )
+#                   ),
+#                   pattern = ",",
+#                   simplify = TRUE
+#                 )[1, ]
+#               } else if (startsWith(f.lines.comment[x], "#Sites map "))
+#                 reach.site.map <- TRUE
+#             }
+#           }
+#         }
+#       }
+#
+#       samples <- tail(
+#         samples,
+#         n = as.integer(-ceiling(length(samples) * burn.in))
+#       )
+#
+#       ret <- list(
+#         gt = array(
+#           data = rowSums(sapply(samples, "[[", 1L)),
+#           dim = c(num.sites, num.cells, length(gt.category)),
+#           dimnames = list(
+#             site.map[sites],
+#             cell.names,
+#             gt.category
+#           )
+#         ),
+#         ado = array(
+#           data = rowSums(sapply(samples, "[[", 2L)),
+#           dim = c(num.sites, num.cells, length(ado.category)),
+#           dimnames = list(
+#             site.map[sites],
+#             cell.names,
+#             ado.category
+#           )
+#         )
+#       )
+#     },
+#     finally = close(.gt.ado.sample.file)
+#   )
+#
+#   if (!is.null(local.copy))
+#     saveRDS(
+#       object = ret,
+#       file = local.copy
+#     )
+#
+#   return(ret)
+# }
+#
+#
+# loadSamples2 <- function(
+#   file,
+#   num.cells,
+#   num.lines.to.read = 100L,
+#   burn.in = 0.1,
+#   per.sample.lapply = function(l, ...) pblapply(l, cl = 8L, ...),
+#   per.site.lapply = function(l, ...) lapply(l, ...),
+#   local.copy = NULL
+# ) {
+#   stopifnot(!is.null(file) && file.exists(file))
+#
+#   .start <- Sys.time()
+#
+#   if (burn.in > 1.0 || burn.in < 0.0) burn.in <- 0.1
+#
+#   .gt.ado.sample.file <- file(file, "r")
+#   tryCatch(
+#     {
+#       f.lines <- readLines(.gt.ado.sample.file, n = 1L)
+#
+#       psedu.site.names <- tail(
+#         str_split(
+#           string = f.lines,
+#           pattern = "\t",
+#           simplify = TRUE
+#         )[1L,],
+#         n = -1L
+#       )
+#       num.sites <- length(psedu.site.names)
+#       psedu.cell.names <- paste0("cell", 1L:num.cells)
+#       reach.site.map <- FALSE
+#       site.map <- list()
+#
+#       gt.ado.sample <- list()
+#
+#       iter.sample <- 0L
+#       iter.site.map <- 0L
+#       while (TRUE) {
+#         f.lines <- readLines(.gt.ado.sample.file, n = num.lines.to.read)
+#         if (length(f.lines) == 0L) break
+#
+#         is.comment <- startsWith(x = f.lines, prefix = "#")
+#         f.lines.sample <- f.lines[!is.comment]
+#         f.lines.comment <- f.lines[is.comment]
+#
+#         if (length(f.lines.sample) > 0L) {
+#           iter.sample %+=% 1L
+#
+#           sample.site <- str_split(
+#             string = f.lines.sample,
+#             pattern = "\t",
+#             simplify = TRUE
+#           )
+#
+#           stopifnot(dim(sample.site)[2L] == num.sites + 1L)
+#
+#           gt.ado.sample[[iter.sample]] <- do.call(
+#             rbind,
+#             per.sample.lapply(
+#               seq_len(dim(sample.site)[1L]),
+#               function(x) {
+#                 site.cell <- str_split(
+#                   string = sample.site[x, 2L:(num.sites + 1L)],
+#                   pattern = ";",
+#                   simplify = TRUE
+#                 )
+#
+#                 stopifnot(dim(site.cell)[2L] == num.cells)
+#
+#                 do.call(
+#                   rbind,
+#                   per.site.lapply(
+#                     seq_len(num.sites),
+#                     function(y) {
+#                       as.data.frame(t(sapply(
+#                         seq_len(num.cells),
+#                         function(z) {
+#                           gt.ado <- str_split(
+#                             string = site.cell[y, z],
+#                             pattern = ",",
+#                             simplify = TRUE
+#                           )[1L,]
+#
+#                           ret <- c(sample.site[x, 1L], psedu.site.names[y], psedu.cell.names[z], gt.ado[1L], gt.ado[2L])
+#                           names(ret) <- c("sample", "psedu_site", "psedu_cell", "gt", "ado")
+#                           return(ret)
+#                         }
+#                       )))
+#                     }
+#                   )
+#                 )
+#               }
+#             )
+#           )
+#         }
+#
+#         if (length(f.lines.comment) > 0L) {
+#           if (reach.site.map) {
+#             iter.site.map %+=% 1L
+#             site.map[[iter.site.map]] <- .get.site.map2(f.lines.comment)
+#           } else {
+#             for (x in seq_len(length(f.lines.comment))) {
+#               if (reach.site.map) {
+#                 iter.site.map %+=% 1L
+#                 site.map[[iter.site.map]] <- .get.site.map2(f.lines.comment[x:length(f.lines.comment)])
+#                 break
+#               } else if (startsWith(f.lines.comment[x], "#Cells: ")) {
+#                 cell.names <- tibble(
+#                   psedu_cell = psedu.cell.names,
+#                   cell = str_split(
+#                     string = sub(
+#                       pattern = "\\s",
+#                       replacement = "",
+#                       x = sub(
+#                         pattern = "^#Cells: ",
+#                         replacement = "",
+#                         x = f.lines.comment[x]
+#                       )
+#                     ),
+#                     pattern = ",",
+#                     simplify = TRUE
+#                   )[1, ]
+#                 )
+#               } else if (startsWith(f.lines.comment[x], "#Sites map ")) {
+#                 reach.site.map <- TRUE
+#               }
+#             }
+#           }
+#         }
+#       }
+#
+#       gt.ado.sample <- do.call(rbind, gt.ado.sample)
+#       gt.ado.sample$sample <- as.integer(gt.ado.sample$sample)
+#       gt.ado.sample$ado <- as.integer(gt.ado.sample$ado)
+#       site.map <- do.call(rbind, site.map)
+#
+#       samples <- sort(unique(gt.ado.sample$sample))
+#       gt.ado.sample <- gt.ado.sample %>%
+#         filter(sample > samples[as.integer(ceiling(length(samples) * burn.in))]) %>%
+#         left_join(cell.names, by = "psedu_cell") %>%
+#         left_join(site.map, by = "psedu_site") %>%
+#         select(-psedu_cell, -psedu_site) %>%
+#         rename(site = collapsed_site)
+#
+#       gt.ado.names <- c("gt", "ado")
+#       ret <- pbsapply(
+#         gt.ado.names,
+#         function(x) {
+#           excluded <- gt.ado.names[x != gt.ado.names]
+#           gt.ado.sample %>%
+#             select(-!!as.name(excluded)) %>%
+#             add_count(cell, site, !!as.name(x), name = "count") %>%
+#             select(-sample) %>%
+#             unique() %>%
+#             group_by(cell, site) %>%
+#             mutate(freq = count / sum(count)) %>%
+#             ungroup() %>%
+#             arrange(chr, pos, cell, !!as.name(x))
+#         },
+#         simplify = FALSE,
+#         USE.NAMES = TRUE,
+#         cl = 2L
+#       )
+#     },
+#     finally = close(.gt.ado.sample.file)
+#   )
+#
+#   if (!is.null(local.copy))
+#     saveRDS(
+#       object = ret,
+#       file = local.copy
+#     )
+#
+#   .end <- Sys.time()
+#   message(paste0("Finished in ", (.end - .start), " seconds."))
+#
+#   return(ret)
+# }
+#
+#
+# loadSamples3 <- function(
+#   file,
+#   num.cells,
+#   burn.in = 0.1,
+#   local.copy = NULL
+# ) {
+#   stopifnot(!is.null(file) && file.exists(file))
+#
+#   .start <- Sys.time()
+#
+#   if (burn.in > 1.0 || burn.in < 0.0) burn.in <- 0.1
+#
+#   psedu.cell.names <- paste0("cell", 1L:num.cells)
+#
+#   gt.ado.sample <- read.table(
+#     file = file,
+#     header = TRUE
+#   ) %>%
+#     column_to_rownames(var = "Sample")
+#
+#   gt.ado.sample <- tibble(
+#       data = as.vector(as.matrix(gt.ado.sample)),
+#       sample = as.integer(rep(rownames(gt.ado.sample), dim(gt.ado.sample)[2L])),
+#       psedu_site = as.vector(sapply(colnames(gt.ado.sample), function(x) rep(x, dim(gt.ado.sample)[1L]))),
+#       psedu_cell = rep(paste(psedu.cell.names, collapse = ";"), dim(gt.ado.sample)[1L] * dim(gt.ado.sample)[2L])
+#     ) %>%
+#     separate_rows(data, psedu_cell, sep = ";") %>%
+#     separate(col = data, into = c("gt", "ado"), sep = ",", convert = TRUE)
+#
+#   .gt.ado.sample.file <- file(file, "r")
+#   tryCatch(
+#     {
+#       readLines(.gt.ado.sample.file, n = 1L)
+#
+#       reach.site.map <- FALSE
+#       site.map <- list()
+#
+#       iter.site.map <- 0L
+#       while (TRUE) {
+#         f.lines <- readLines(.gt.ado.sample.file, n = 1000L)
+#         if (length(f.lines) == 0L) break
+#
+#         is.comment <- startsWith(x = f.lines, prefix = "#")
+#         f.lines.comment <- f.lines[is.comment]
+#
+#         if (length(f.lines.comment) > 0L) {
+#           if (reach.site.map) {
+#             iter.site.map %+=% 1L
+#             site.map[[iter.site.map]] <- .get.site.map2(f.lines.comment)
+#           } else {
+#             for (x in seq_len(length(f.lines.comment))) {
+#               if (reach.site.map) {
+#                 iter.site.map %+=% 1L
+#                 site.map[[iter.site.map]] <- .get.site.map2(f.lines.comment[x:length(f.lines.comment)])
+#                 break
+#               } else if (startsWith(f.lines.comment[x], "#Cells: ")) {
+#                 cell.names <- tibble(
+#                   psedu_cell = psedu.cell.names,
+#                   cell = str_split(
+#                     string = sub(
+#                       pattern = "\\s",
+#                       replacement = "",
+#                       x = sub(
+#                         pattern = "^#Cells: ",
+#                         replacement = "",
+#                         x = f.lines.comment[x]
+#                       )
+#                     ),
+#                     pattern = ",",
+#                     simplify = TRUE
+#                   )[1, ]
+#                 )
+#               } else if (startsWith(f.lines.comment[x], "#Sites map ")) {
+#                 reach.site.map <- TRUE
+#               }
+#             }
+#           }
+#         }
+#       }
+#
+#       site.map <- do.call(rbind, site.map)
+#
+#       samples <- sort(unique(gt.ado.sample$sample))
+#       gt.ado.sample <- gt.ado.sample %>%
+#         filter(sample > samples[as.integer(ceiling(length(samples) * burn.in))]) %>%
+#         left_join(cell.names, by = "psedu_cell") %>%
+#         left_join(site.map, by = "psedu_site") %>%
+#         select(-psedu_cell, -psedu_site) %>%
+#         rename(site = collapsed_site)
+#
+#       gt.ado.names <- c("gt", "ado")
+#       ret <- pbsapply(
+#         gt.ado.names,
+#         function(x) {
+#           excluded <- gt.ado.names[x != gt.ado.names]
+#           gt.ado.sample %>%
+#             select(-!!as.name(excluded)) %>%
+#             add_count(cell, site, !!as.name(x), name = "count") %>%
+#             select(-sample) %>%
+#             unique() %>%
+#             group_by(cell, site) %>%
+#             mutate(freq = count / sum(count)) %>%
+#             ungroup() %>%
+#             arrange(chr, pos, cell, !!as.name(x))
+#         },
+#         simplify = FALSE,
+#         USE.NAMES = TRUE,
+#         cl = 2L
+#       )
+#     },
+#     finally = close(.gt.ado.sample.file)
+#   )
+#
+#   if (!is.null(local.copy))
+#     saveRDS(
+#       object = ret,
+#       file = local.copy
+#     )
+#
+#   .end <- Sys.time()
+#   message(paste0("Finished in ", (.end - .start), " seconds."))
+#
+#   return(ret)
+# }
+#
+#
+# .get.site.map <- function(x) {
+#   ret <- str_split(
+#     string = sub(
+#       pattern = "^#",
+#       replacement = "",
+#       x = x
+#     ),
+#     pattern = "->",
+#     simplify = TRUE
+#   )
+#
+#   stopifnot(dim(ret)[2L] == 2L)
+#
+#   colnames(ret) <- c("psedu", "real")
+#   ret <- as.data.frame(ret) %>%
+#     mutate(p_real = .parse.real.site(real))
+#
+#   site.names <- ret$p_real
+#   names(site.names) <- ret$psedu
+#   return(site.names)
+# }
+#
+#
+# .get.site.map2 <- function(x) {
+#   ret <- str_split(
+#     string = sub(
+#       pattern = "^#",
+#       replacement = "",
+#       x = x
+#     ),
+#     pattern = "->",
+#     simplify = TRUE
+#   )
+#
+#   stopifnot(dim(ret)[2L] == 2L)
+#
+#   colnames(ret) <- c("psedu_site", "ori_site")
+#   ret <- as.data.frame(ret) %>%
+#     left_join(.parse.real.site2(.$ori_site), by = "ori_site") %>%
+#     select(-ori_site)
+#   return(ret)
+# }
+#
+#
+# .parse.real.site <- function(x) {
+#   ret <- str_split(
+#     string = x,
+#     pattern = ",",
+#     simplify = TRUE
+#   )
+#
+#   stopifnot(dim(ret)[2L] == 4L)
+#
+#   colnames(ret) <- c("chr", "pos", "ref", "alt")
+#   ret <- as.data.frame(ret) %>%
+#     mutate(collapsed = paste0(chr, ":", pos, "_", ref, "/", alt))
+#   return(ret$collapsed)
+# }
+#
+#
+# .parse.real.site2 <- function(x) {
+#   ret <- str_split(
+#     string = x,
+#     pattern = ",",
+#     simplify = TRUE
+#   )
+#
+#   stopifnot(dim(ret)[2L] == 4L)
+#
+#   colnames(ret) <- c("chr", "pos", "ref", "alt")
+#   ret <- as.data.frame(ret) %>%
+#     mutate(collapsed_site = paste0(chr, ":", pos, "_", ref, "/", alt)) %>%
+#     mutate(ori_site = x)
+#
+#   ret$pos <- as.integer(ret$pos)
+#
+#   return(ret)
+# }
 
 
 loadVcf <- function(
@@ -842,6 +1460,23 @@ loadVcf <- function(
   )
   message("Genotype converted.")
 
+  # Save VCF file if cell names are renamed or filtered.
+  if (!is.null(destination.file)) {
+    destination.file.2 <- file.path(
+      dirname(destination.file),
+      sub("(.*)\\.(.*)$", "\\1_cells.\\2", basename(destination.file))
+    )
+
+    if (!file.exists(destination.file.2) && (!is.null(rename.cells) || !is.null(included.cells))) {
+      message("Saving VCF file...")
+      writeVcf(
+        vcf,
+        destination.file.2
+      )
+      message("VCF file saved.")
+    }
+  }
+
   if (!is.null(local.copy))
     saveRDS(
       object = vcf,
@@ -884,6 +1519,71 @@ get.ternary <- function(data) {
 
 get.ado.state <- function(data) {
   return(geno(data)[["ADO"]])
+}
+
+
+convert2sifit <- function(
+  vcf,
+  prefix = '.',
+  binary = TRUE
+) {
+  dir.create(prefix, showWarnings = FALSE)
+
+  file.cell.names <- file.path(prefix, "cell_names")
+  file.data <- file.path(prefix, "data")
+
+  # Get the list of ternary genotypes.
+  genotypes <- get.ternary(vcf)
+
+  # Get the list of site names.
+  sites <- rownames(genotypes)
+
+  # Get the list of cell names.
+  cells <- colnames(genotypes)
+
+  writeLines(
+    text = cells,
+    con = file.cell.names,
+    sep = " "
+  )
+
+  con <- file(file.data, open = "w")
+  lapply(
+    seq_along(sites),
+    function(x) {
+      writeLines(
+        text = c(
+          sites[x],
+          .convert2sifit.per.site(genotypes[x,], binary = binary)
+        ),
+        con = con,
+        sep = " "
+      )
+      writeLines(
+        text = "\n",
+        con = con,
+        sep = ""
+      )
+    }
+  )
+  close(con)
+}
+
+
+.convert2sifit.per.site <- function(
+  vals,
+  binary = TRUE
+) {
+  vals[vals > 2] <- 2
+  vals[vals == -3] <- 3
+  vals[vals == -2] <- 2
+  vals[vals == -1] <- 0
+
+  if (binary) {
+    vals[vals == 2] <- 1
+  }
+
+  return(vals)
 }
 
 
@@ -1107,7 +1807,7 @@ get.ordered.intersactions <- function(ordered.ref, target) {
 }
 
 
-get.hm.color <- function(i) {
+get.gt.hm.color <- function(i) {
   if (i == 1)
     colors <- c(
       wes_palette("Moonrise3")[1],
