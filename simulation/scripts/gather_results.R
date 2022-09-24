@@ -49,958 +49,949 @@ output.prefix <- "./"
 
 
 ###################################################
-#                    Variables                    #
-###################################################
-
-tree.info <- data.frame()
-param.info <- data.frame()
-var.info <- data.frame()
-
-
-###################################################
 #            Import simulation results            #
 ###################################################
 
-new.col.names <- c("simulated_data", "mutation_rate")
+new.col.names <- c("simulated_data", "mutation_rate", "data_type", "cna_rate")
 
 # simulation 2
 tree.info.2 <- load.data(
   file = "../simulated_data_02/trees_info_updated.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 2L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(2, 1.0E-6)
+  )
 )
 site.info.2 <- load.data(
   file = "../simulated_data_02/sieve_sites_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 2L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(2, 1.0E-6)
+  )
 )
 param.info.2 <- load.data(
   file = "../simulated_data_02/params_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 2L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(2, 1.0E-6)
+  )
 )
 var.info.2 <- load.data(
   file = "../simulated_data_02/variants_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 2L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(2, 1.0E-6)
+  )
 )
 ado.info.2 <- load.data(
   file = "../simulated_data_02/ado_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 2L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(2, 1.0E-6)
+  )
 )
 allelic.info.2 <- load.rds(
   file = "../simulated_data_02/allelic_info.rds",
-  data.label.name = new.col.names[1],
-  data.label = 2L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(2, 1.0E-6)
+  )
 )
 parallel.mut.2 <- load.data(
   file = "../simulated_data_02/summary.tsv",
   sep = " ",
-  data.label.name = new.col.names[1],
-  data.label = 2L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(2, 1.0E-6)
+  )
 )
 
 # simulation 3
 tree.info.3 <- load.data(
   file = "../simulated_data_03/trees_info_updated.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 3L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(3, 3.0E-5)
+  )
 )
 site.info.3 <- load.data(
   file = "../simulated_data_03/sieve_sites_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 3L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(3, 3.0E-5)
+  )
 )
 param.info.3 <- load.data(
   file = "../simulated_data_03/params_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 3L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(3, 3.0E-5)
+  )
 )
 var.info.3 <- load.data(
   file = "../simulated_data_03/variants_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 3L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(3, 3.0E-5)
+  )
 )
 ado.info.3 <- load.data(
   file = "../simulated_data_03/ado_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 3L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(3, 3.0E-5)
+  )
 )
 allelic.info.3 <- load.rds(
   file = "../simulated_data_03/allelic_info.rds",
-  data.label.name = new.col.names[1],
-  data.label = 3L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(3, 3.0E-5)
+  )
 )
 parallel.mut.3 <- load.data(
   file = "../simulated_data_03/summary.tsv",
   sep = " ",
-  data.label.name = new.col.names[1],
-  data.label = 3L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(3, 3.0E-5)
+  )
 )
 
 # simulation 4
 tree.info.4 <- load.data(
   file = "../simulated_data_04/trees_info_updated.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 4L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(4, 8.0E-6)
+  )
 )
 site.info.4 <- load.data(
   file = "../simulated_data_04/sieve_sites_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 4L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(4, 8.0E-6)
+  )
 )
 param.info.4 <- load.data(
   file = "../simulated_data_04/params_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 4L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(4, 8.0E-6)
+  )
 )
 var.info.4 <- load.data(
   file = "../simulated_data_04/variants_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 4L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(4, 8.0E-6)
+  )
 )
 ado.info.4 <- load.data(
   file = "../simulated_data_04/ado_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 4L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(4, 8.0E-6)
+  )
 )
 allelic.info.4 <- load.rds(
   file = "../simulated_data_04/allelic_info.rds",
-  data.label.name = new.col.names[1],
-  data.label = 4L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(4, 8.0E-6)
+  )
 )
 parallel.mut.4 <- load.data(
   file = "../simulated_data_04/summary.tsv",
   sep = " ",
-  data.label.name = new.col.names[1],
-  data.label = 4L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(4, 8.0E-6)
+  )
 )
 
 # simulation 11
 tree.info.11 <- load.data(
   file = "../simulated_data_11/trees_info_updated.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 11L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(11, 1.0E-6)
+  )
 )
 site.info.11 <- load.data(
   file = "../simulated_data_11/sieve_sites_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 11L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(11, 1.0E-6)
+  )
 )
 param.info.11 <- load.data(
   file = "../simulated_data_11/params_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 11L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(11, 1.0E-6)
+  )
 )
 var.info.11 <- load.data(
   file = "../simulated_data_11/variants_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 11L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(11, 1.0E-6)
+  )
 )
 ado.info.11 <- load.data(
   file = "../simulated_data_11/ado_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 11L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(11, 1.0E-6)
+  )
 )
 allelic.info.11 <- load.rds(
   file = "../simulated_data_11/allelic_info.rds",
-  data.label.name = new.col.names[1],
-  data.label = 11L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(11, 1.0E-6)
+  )
 )
 parallel.mut.11 <- load.data(
   file = "../simulated_data_11/summary.tsv",
   sep = " ",
-  data.label.name = new.col.names[1],
-  data.label = 11L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(11, 1.0E-6)
+  )
 )
 
 # simulation 12
 tree.info.12 <- load.data(
   file = "../simulated_data_12/trees_info_updated.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 12L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(12, 8.0E-6)
+  )
 )
 site.info.12 <- load.data(
   file = "../simulated_data_12/sieve_sites_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 12L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(12, 8.0E-6)
+  )
 )
 param.info.12 <- load.data(
   file = "../simulated_data_12/params_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 12L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(12, 8.0E-6)
+  )
 )
 var.info.12 <- load.data(
   file = "../simulated_data_12/variants_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 12L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(12, 8.0E-6)
+  )
 )
 ado.info.12 <- load.data(
   file = "../simulated_data_12/ado_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 12L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(12, 8.0E-6)
+  )
 )
 allelic.info.12 <- load.rds(
   file = "../simulated_data_12/allelic_info.rds",
-  data.label.name = new.col.names[1],
-  data.label = 12L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(12, 8.0E-6)
+  )
 )
 parallel.mut.12 <- load.data(
   file = "../simulated_data_12/summary.tsv",
   sep = " ",
-  data.label.name = new.col.names[1],
-  data.label = 12L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(12, 8.0E-6)
+  )
 )
 
 # simulation 13
 tree.info.13 <- load.data(
   file = "../simulated_data_13/trees_info_updated.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 13L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(13, 3.0E-5)
+  )
 )
 site.info.13 <- load.data(
   file = "../simulated_data_13/sieve_sites_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 13L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(13, 3.0E-5)
+  )
 )
 param.info.13 <- load.data(
   file = "../simulated_data_13/params_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 13L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(13, 3.0E-5)
+  )
 )
 var.info.13 <- load.data(
   file = "../simulated_data_13/variants_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 13L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(13, 3.0E-5)
+  )
 )
 ado.info.13 <- load.data(
   file = "../simulated_data_13/ado_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 13L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(13, 3.0E-5)
+  )
 )
 allelic.info.13 <- load.rds(
   file = "../simulated_data_13/allelic_info.rds",
-  data.label.name = new.col.names[1],
-  data.label = 13L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(13, 3.0E-5)
+  )
 )
 parallel.mut.13 <- load.data(
   file = "../simulated_data_13/summary.tsv",
   sep = " ",
-  data.label.name = new.col.names[1],
-  data.label = 13L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(13, 3.0E-5)
+  )
 )
 
 # simulation 21
 tree.info.21 <- load.data(
   file = "../simulated_data_21/trees_info_updated.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 21L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(21, 1.0E-6)
+  )
 )
 site.info.21 <- load.data(
   file = "../simulated_data_21/sieve_sites_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 21L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(21, 1.0E-6)
+  )
 )
 param.info.21 <- load.data(
   file = "../simulated_data_21/params_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 21L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(21, 1.0E-6)
+  )
 )
 var.info.21 <- load.data(
   file = "../simulated_data_21/variants_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 21L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(21, 1.0E-6)
+  )
 )
 ado.info.21 <- load.data(
   file = "../simulated_data_21/ado_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 21L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(21, 1.0E-6)
+  )
 )
 allelic.info.21 <- load.rds(
   file = "../simulated_data_21/allelic_info.rds",
-  data.label.name = new.col.names[1],
-  data.label = 21L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(21, 1.0E-6)
+  )
 )
 parallel.mut.21 <- load.data(
   file = "../simulated_data_21/summary.tsv",
   sep = " ",
-  data.label.name = new.col.names[1],
-  data.label = 21L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(21, 1.0E-6)
+  )
 )
 
 # simulation 22
 tree.info.22 <- load.data(
   file = "../simulated_data_22/trees_info_updated.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 22L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(22, 8.0E-6)
+  )
 )
 site.info.22 <- load.data(
   file = "../simulated_data_22/sieve_sites_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 22L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(22, 8.0E-6)
+  )
 )
 param.info.22 <- load.data(
   file = "../simulated_data_22/params_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 22L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(22, 8.0E-6)
+  )
 )
 var.info.22 <- load.data(
   file = "../simulated_data_22/variants_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 22L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(22, 8.0E-6)
+  )
 )
 ado.info.22 <- load.data(
   file = "../simulated_data_22/ado_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 22L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(22, 8.0E-6)
+  )
 )
 allelic.info.22 <- load.rds(
   file = "../simulated_data_22/allelic_info.rds",
-  data.label.name = new.col.names[1],
-  data.label = 22L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(22, 8.0E-6)
+  )
 )
 parallel.mut.22 <- load.data(
   file = "../simulated_data_22/summary.tsv",
   sep = " ",
-  data.label.name = new.col.names[1],
-  data.label = 22L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(22, 8.0E-6)
+  )
 )
 
 # simulation 23
 tree.info.23 <- load.data(
   file = "../simulated_data_23/trees_info_updated.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 23L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(23, 3.0E-5)
+  )
 )
 site.info.23 <- load.data(
   file = "../simulated_data_23/sieve_sites_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 23L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(23, 3.0E-5)
+  )
 )
 param.info.23 <- load.data(
   file = "../simulated_data_23/params_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 23L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(23, 3.0E-5)
+  )
 )
 var.info.23 <- load.data(
   file = "../simulated_data_23/variants_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 23L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(23, 3.0E-5)
+  )
 )
 ado.info.23 <- load.data(
   file = "../simulated_data_23/ado_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 23L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(23, 3.0E-5)
+  )
 )
 allelic.info.23 <- load.rds(
   file = "../simulated_data_23/allelic_info.rds",
-  data.label.name = new.col.names[1],
-  data.label = 23L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(23, 3.0E-5)
+  )
 )
 parallel.mut.23 <- load.data(
   file = "../simulated_data_23/summary.tsv",
   sep = " ",
-  data.label.name = new.col.names[1],
-  data.label = 23L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(23, 3.0E-5)
+  )
 )
 
 # simulation 31
 tree.info.31 <- load.data(
   file = "../simulated_data_31/trees_info_updated.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 31L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(31, 1.0E-6)
+  )
 )
 site.info.31 <- load.data(
   file = "../simulated_data_31/sieve_sites_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 31L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(31, 1.0E-6)
+  )
 )
 param.info.31 <- load.data(
   file = "../simulated_data_31/params_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 31L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(31, 1.0E-6)
+  )
 )
 var.info.31 <- load.data(
   file = "../simulated_data_31/variants_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 31L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(31, 1.0E-6)
+  )
 )
 ado.info.31 <- load.data(
   file = "../simulated_data_31/ado_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 31L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(31, 1.0E-6)
+  )
 )
 allelic.info.31 <- load.rds(
   file = "../simulated_data_31/allelic_info.rds",
-  data.label.name = new.col.names[1],
-  data.label = 31L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(31, 1.0E-6)
+  )
 )
 parallel.mut.31 <- load.data(
   file = "../simulated_data_31/summary.tsv",
   sep = " ",
-  data.label.name = new.col.names[1],
-  data.label = 31L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(31, 1.0E-6)
+  )
 )
 
 # simulation 32
 tree.info.32 <- load.data(
   file = "../simulated_data_32/trees_info_updated.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 32L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(32, 8.0E-6)
+  )
 )
 site.info.32 <- load.data(
   file = "../simulated_data_32/sieve_sites_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 32L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(32, 8.0E-6)
+  )
 )
 param.info.32 <- load.data(
   file = "../simulated_data_32/params_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 32L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(32, 8.0E-6)
+  )
 )
 var.info.32 <- load.data(
   file = "../simulated_data_32/variants_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 32L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(32, 8.0E-6)
+  )
 )
 ado.info.32 <- load.data(
   file = "../simulated_data_32/ado_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 32L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(32, 8.0E-6)
+  )
 )
 allelic.info.32 <- load.rds(
   file = "../simulated_data_32/allelic_info.rds",
-  data.label.name = new.col.names[1],
-  data.label = 32L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(32, 8.0E-6)
+  )
 )
 parallel.mut.32 <- load.data(
   file = "../simulated_data_32/summary.tsv",
   sep = " ",
-  data.label.name = new.col.names[1],
-  data.label = 32L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(32, 8.0E-6)
+  )
 )
 
 # simulation 33
 tree.info.33 <- load.data(
   file = "../simulated_data_33/trees_info_updated.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 33L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(33, 3.0E-5)
+  )
 )
 site.info.33 <- load.data(
   file = "../simulated_data_33/sieve_sites_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 33L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(33, 3.0E-5)
+  )
 )
 param.info.33 <- load.data(
   file = "../simulated_data_33/params_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 33L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(33, 3.0E-5)
+  )
 )
 var.info.33 <- load.data(
   file = "../simulated_data_33/variants_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 33L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(33, 3.0E-5)
+  )
 )
 ado.info.33 <- load.data(
   file = "../simulated_data_33/ado_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 33L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(33, 3.0E-5)
+  )
 )
 allelic.info.33 <- load.rds(
   file = "../simulated_data_33/allelic_info.rds",
-  data.label.name = new.col.names[1],
-  data.label = 33L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(33, 3.0E-5)
+  )
 )
 parallel.mut.33 <- load.data(
   file = "../simulated_data_33/summary.tsv",
   sep = " ",
-  data.label.name = new.col.names[1],
-  data.label = 33L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(33, 3.0E-5)
+  )
 )
 
 # simulation 41
 tree.info.41 <- load.data(
   file = "../simulated_data_41/trees_info_updated.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 41L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(41, 1.0E-6)
+  )
 )
 site.info.41 <- load.data(
   file = "../simulated_data_41/sieve_sites_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 41L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(41, 1.0E-6)
+  )
 )
 param.info.41 <- load.data(
   file = "../simulated_data_41/params_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 41L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(41, 1.0E-6)
+  )
 )
 var.info.41 <- load.data(
   file = "../simulated_data_41/variants_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 41L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(41, 1.0E-6)
+  )
 )
 ado.info.41 <- load.data(
   file = "../simulated_data_41/ado_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 41L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(41, 1.0E-6)
+  )
 )
 allelic.info.41 <- load.rds(
   file = "../simulated_data_41/allelic_info.rds",
-  data.label.name = new.col.names[1],
-  data.label = 41L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(41, 1.0E-6)
+  )
 )
 parallel.mut.41 <- load.data(
   file = "../simulated_data_41/summary.tsv",
   sep = " ",
-  data.label.name = new.col.names[1],
-  data.label = 41L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(41, 1.0E-6)
+  )
 )
 
 # simulation 42
 tree.info.42 <- load.data(
   file = "../simulated_data_42/trees_info_updated.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 42L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(42, 8.0E-6)
+  )
 )
 site.info.42 <- load.data(
   file = "../simulated_data_42/sieve_sites_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 42L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(42, 8.0E-6)
+  )
 )
 param.info.42 <- load.data(
   file = "../simulated_data_42/params_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 42L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(42, 8.0E-6)
+  )
 )
 var.info.42 <- load.data(
   file = "../simulated_data_42/variants_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 42L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(42, 8.0E-6)
+  )
 )
 ado.info.42 <- load.data(
   file = "../simulated_data_42/ado_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 42L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(42, 8.0E-6)
+  )
 )
 allelic.info.42 <- load.rds(
   file = "../simulated_data_42/allelic_info.rds",
-  data.label.name = new.col.names[1],
-  data.label = 42L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(42, 8.0E-6)
+  )
 )
 parallel.mut.42 <- load.data(
   file = "../simulated_data_42/summary.tsv",
   sep = " ",
-  data.label.name = new.col.names[1],
-  data.label = 42L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(42, 8.0E-6)
+  )
 )
 
 # simulation 43
 tree.info.43 <- load.data(
   file = "../simulated_data_43/trees_info_updated.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 43L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(43, 3.0E-5)
+  )
 )
 site.info.43 <- load.data(
   file = "../simulated_data_43/sieve_sites_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 43L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(43, 3.0E-5)
+  )
 )
 param.info.43 <- load.data(
   file = "../simulated_data_43/params_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 43L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(43, 3.0E-5)
+  )
 )
 var.info.43 <- load.data(
   file = "../simulated_data_43/variants_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 43L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(43, 3.0E-5)
+  )
 )
 ado.info.43 <- load.data(
   file = "../simulated_data_43/ado_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 43L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(43, 3.0E-5)
+  )
 )
 allelic.info.43 <- load.rds(
   file = "../simulated_data_43/allelic_info.rds",
-  data.label.name = new.col.names[1],
-  data.label = 43L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(43, 3.0E-5)
+  )
 )
 parallel.mut.43 <- load.data(
   file = "../simulated_data_43/summary.tsv",
   sep = " ",
-  data.label.name = new.col.names[1],
-  data.label = 43L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(43, 3.0E-5)
+  )
 )
 
 # simulation 51
 tree.info.51 <- load.data(
   file = "../simulated_data_51/trees_info_updated.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 51L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(51, 1.0E-6)
+  )
 )
 site.info.51 <- load.data(
   file = "../simulated_data_51/sieve_sites_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 51L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(51, 1.0E-6)
+  )
 )
 param.info.51 <- load.data(
   file = "../simulated_data_51/params_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 51L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(51, 1.0E-6)
+  )
 )
 var.info.51 <- load.data(
   file = "../simulated_data_51/variants_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 51L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(51, 1.0E-6)
+  )
 )
 ado.info.51 <- load.data(
   file = "../simulated_data_51/ado_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 51L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(51, 1.0E-6)
+  )
 )
 allelic.info.51 <- load.rds(
   file = "../simulated_data_51/allelic_info.rds",
-  data.label.name = new.col.names[1],
-  data.label = 51L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(51, 1.0E-6)
+  )
 )
 parallel.mut.51 <- load.data(
   file = "../simulated_data_51/summary.tsv",
   sep = " ",
-  data.label.name = new.col.names[1],
-  data.label = 51L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 1.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(51, 1.0E-6)
+  )
 )
 
 # simulation 52
 tree.info.52 <- load.data(
   file = "../simulated_data_52/trees_info_updated.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 52L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(52, 8.0E-6)
+  )
 )
 site.info.52 <- load.data(
   file = "../simulated_data_52/sieve_sites_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 52L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(52, 8.0E-6)
+  )
 )
 param.info.52 <- load.data(
   file = "../simulated_data_52/params_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 52L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(52, 8.0E-6)
+  )
 )
 var.info.52 <- load.data(
   file = "../simulated_data_52/variants_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 52L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(52, 8.0E-6)
+  )
 )
 ado.info.52 <- load.data(
   file = "../simulated_data_52/ado_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 52L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(52, 8.0E-6)
+  )
 )
 allelic.info.52 <- load.rds(
   file = "../simulated_data_52/allelic_info.rds",
-  data.label.name = new.col.names[1],
-  data.label = 52L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(52, 8.0E-6)
+  )
 )
 parallel.mut.52 <- load.data(
   file = "../simulated_data_52/summary.tsv",
   sep = " ",
-  data.label.name = new.col.names[1],
-  data.label = 52L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 8.0E-6
+  additional_labels = list(
+    new.col.names[1:2],
+    c(52, 8.0E-6)
+  )
 )
 
 # simulation 53
 tree.info.53 <- load.data(
   file = "../simulated_data_53/trees_info_updated.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 53L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(53, 3.0E-5)
+  )
 )
 site.info.53 <- load.data(
   file = "../simulated_data_53/sieve_sites_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 53L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(53, 3.0E-5)
+  )
 )
 param.info.53 <- load.data(
   file = "../simulated_data_53/params_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 53L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(53, 3.0E-5)
+  )
 )
 var.info.53 <- load.data(
   file = "../simulated_data_53/variants_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 53L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(53, 3.0E-5)
+  )
 )
 ado.info.53 <- load.data(
   file = "../simulated_data_53/ado_info.tsv",
-  data.label.name = new.col.names[1],
-  data.label = 53L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(53, 3.0E-5)
+  )
 )
 allelic.info.53 <- load.rds(
   file = "../simulated_data_53/allelic_info.rds",
-  data.label.name = new.col.names[1],
-  data.label = 53L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(53, 3.0E-5)
+  )
 )
 parallel.mut.53 <- load.data(
   file = "../simulated_data_53/summary.tsv",
   sep = " ",
-  data.label.name = new.col.names[1],
-  data.label = 53L,
-  mu.rate.name = new.col.names[2],
-  mu.rate = 3.0E-5
+  additional_labels = list(
+    new.col.names[1:2],
+    c(53, 3.0E-5)
+  )
 )
 
 # combine data
-tree.info <- rbind(
+tree.info <- bind_rows(
   tree.info.2, tree.info.3, tree.info.4,
   tree.info.11, tree.info.12, tree.info.13,
   tree.info.21, tree.info.22, tree.info.23,
@@ -1016,7 +1007,7 @@ rm(
   tree.info.41, tree.info.42, tree.info.43,
   tree.info.51, tree.info.52, tree.info.53
 )
-site.info <- rbind(
+site.info <- bind_rows(
   site.info.2, site.info.3, site.info.4,
   site.info.11, site.info.12, site.info.13,
   site.info.21, site.info.22, site.info.23,
@@ -1032,7 +1023,7 @@ rm(
   site.info.41, site.info.42, site.info.43,
   site.info.51, site.info.52, site.info.53
 )
-param.info <- rbind(
+param.info <- bind_rows(
   param.info.2, param.info.3, param.info.4,
   param.info.11, param.info.12, param.info.13,
   param.info.21, param.info.22, param.info.23,
@@ -1048,7 +1039,7 @@ rm(
   param.info.41, param.info.42, param.info.43,
   param.info.51, param.info.52, param.info.53
 )
-var.info <- rbind(
+var.info <- bind_rows(
   var.info.2, var.info.3, var.info.4,
   var.info.11, var.info.12, var.info.13,
   var.info.21, var.info.22, var.info.23,
@@ -1064,7 +1055,7 @@ rm(
   var.info.41, var.info.42, var.info.43,
   var.info.51, var.info.52, var.info.53
 )
-ado.info <- rbind(
+ado.info <- bind_rows(
   ado.info.2, ado.info.3, ado.info.4,
   ado.info.11, ado.info.12, ado.info.13,
   ado.info.21, ado.info.22, ado.info.23,
@@ -1080,7 +1071,7 @@ rm(
   ado.info.41, ado.info.42, ado.info.43,
   ado.info.51, ado.info.52, ado.info.53
 )
-allelic.info <- rbind(
+allelic.info <- bind_rows(
   allelic.info.2, allelic.info.3, allelic.info.4,
   allelic.info.11, allelic.info.12, allelic.info.13,
   allelic.info.21, allelic.info.22, allelic.info.23,
@@ -1096,7 +1087,7 @@ rm(
   allelic.info.41, allelic.info.42, allelic.info.43,
   allelic.info.51, allelic.info.52, allelic.info.53
 )
-parallel.mut <- rbind(
+parallel.mut <- bind_rows(
   parallel.mut.2, parallel.mut.3, parallel.mut.4,
   parallel.mut.11, parallel.mut.12, parallel.mut.13,
   parallel.mut.21, parallel.mut.22, parallel.mut.23,
@@ -1112,6 +1103,198 @@ rm(
   parallel.mut.41, parallel.mut.42, parallel.mut.43,
   parallel.mut.51, parallel.mut.52, parallel.mut.53
 )
+
+# For CNA benchmarking
+# simulation 4
+tree.info.4 <- load.data(
+  file = "../simulated_data_04/trees_info_updated.tsv",
+  additional_labels = list(
+    new.col.names[3:4],
+    c("no_cna", "0")
+  )
+)
+site.info.4 <- load.data(
+  file = "../simulated_data_04/sieve_sites_info.tsv",
+  additional_labels = list(
+    new.col.names[3:4],
+    c("no_cna", "0")
+  )
+)
+param.info.4 <- load.data(
+  file = "../simulated_data_04/params_info.tsv",
+  additional_labels = list(
+    new.col.names[3:4],
+    c("no_cna", "0")
+  )
+)
+var.info.4 <- load.data(
+  file = "../simulated_data_04/variants_info.tsv",
+  additional_labels = list(
+    new.col.names[3:4],
+    c("no_cna", "0")
+  )
+)
+ado.info.4 <- load.data(
+  file = "../simulated_data_04/ado_info.tsv",
+  additional_labels = list(
+    new.col.names[3:4],
+    c("no_cna", "0")
+  )
+)
+allelic.info.4 <- load.rds(
+  file = "../simulated_data_04/allelic_info.rds",
+  additional_labels = list(
+    new.col.names[3:4],
+    c("no_cna", "0")
+  )
+)
+
+# simulation 4.1
+tree.info.4.1 <- load.data(
+  file = "../simulated_data_04_01/trees_info_updated.tsv",
+  additional_labels = list(
+    new.col.names[4],
+    "1/3"
+  )
+)
+site.info.4.1 <- load.data(
+  file = "../simulated_data_04_01/sieve_sites_info.tsv",
+  additional_labels = list(
+    new.col.names[4],
+    "1/3"
+  )
+)
+param.info.4.1 <- load.data(
+  file = "../simulated_data_04_01/params_info.tsv",
+  additional_labels = list(
+    new.col.names[4],
+    "1/3"
+  )
+)
+var.info.4.1 <- load.data(
+  file = "../simulated_data_04_01/variants_info.tsv",
+  additional_labels = list(
+    new.col.names[4],
+    "1/3"
+  )
+)
+ado.info.4.1 <- load.data(
+  file = "../simulated_data_04_01/ado_info.tsv",
+  additional_labels = list(
+    new.col.names[4],
+    "1/3"
+  )
+)
+allelic.info.4.1 <- load.rds(
+  file = "../simulated_data_04_01/allelic_info.rds",
+  additional_labels = list(
+    new.col.names[4],
+    "1/3"
+  )
+)
+
+# simulation 4.2
+tree.info.4.2 <- load.data(
+  file = "../simulated_data_04_02/trees_info_updated.tsv",
+  additional_labels = list(
+    new.col.names[4],
+    "2/3"
+  )
+)
+site.info.4.2 <- load.data(
+  file = "../simulated_data_04_02/sieve_sites_info.tsv",
+  additional_labels = list(
+    new.col.names[4],
+    "2/3"
+  )
+)
+param.info.4.2 <- load.data(
+  file = "../simulated_data_04_02/params_info.tsv",
+  additional_labels = list(
+    new.col.names[4],
+    "2/3"
+  )
+)
+var.info.4.2 <- load.data(
+  file = "../simulated_data_04_02/variants_info.tsv",
+  additional_labels = list(
+    new.col.names[4],
+    "2/3"
+  )
+)
+ado.info.4.2 <- load.data(
+  file = "../simulated_data_04_02/ado_info.tsv",
+  additional_labels = list(
+    new.col.names[4],
+    "2/3"
+  )
+)
+allelic.info.4.2 <- load.rds(
+  file = "../simulated_data_04_02/allelic_info.rds",
+  additional_labels = list(
+    new.col.names[4],
+    "2/3"
+  )
+)
+
+# combine data
+tree.info.cna <- bind_rows(
+  tree.info.4, tree.info.4.1, tree.info.4.2
+)
+rm(
+  tree.info.4, tree.info.4.1, tree.info.4.2
+)
+site.info.cna <- bind_rows(
+  site.info.4, site.info.4.1, site.info.4.2
+)
+rm(
+  site.info.4, site.info.4.1, site.info.4.2
+)
+param.info.cna <- bind_rows(
+  param.info.4, param.info.4.1, param.info.4.2
+)
+rm(
+  param.info.4, param.info.4.1, param.info.4.2
+)
+var.info.cna <- bind_rows(
+  var.info.4, var.info.4.1, var.info.4.2
+)
+rm(
+  var.info.4, var.info.4.1, var.info.4.2
+)
+ado.info.cna <- bind_rows(
+  ado.info.4, ado.info.4.1, ado.info.4.2
+)
+rm(
+  ado.info.4, ado.info.4.1, ado.info.4.2
+)
+allelic.info.cna <- bind_rows(
+  allelic.info.4, allelic.info.4.1, allelic.info.4.2
+)
+rm(
+  allelic.info.4, allelic.info.4.1, allelic.info.4.2
+)
+
+# For efficiency benchmarking
+efficiency.4 <- load.data(
+  file = "../efficient_benchmark_04/file.tsv",
+  additional_labels = list(
+    "cell_num",
+    40L
+  )
+)
+
+efficiency.12 <- load.data(
+  file = "../efficient_benchmark_12/file.tsv",
+  additional_labels = list(
+    "cell_num",
+    100L
+  )
+)
+
+efficiency <- bind_rows(efficiency.4, efficiency.12) %>%
+  select(-file)
+rm(efficiency.4, efficiency.12)
 
 # For facets
 cell.num.labels <- c("40 cells", "100 cells")
@@ -1122,6 +1305,11 @@ allelic.raw.var <- c(
   "Low mean\nHigh variance"
 )
 names(allelic.raw.var) <- c("2", "10", "20")
+cna.sites.prop.labels <- c("No CNAs", "CNAs in 1/3 of all sites", "CNAs in 2/3 of all sites")
+names(cna.sites.prop.labels) <- c("0", "1/3", "2/3")
+
+cna.status.labels <- c("None", "Excluded", "Included")
+names(cna.status.labels) <- c("no_cna", "exc_cnv", "inc_cnv")
 
 # process columns
 tree.info$cell_num <- as.factor(tree.info$cell_num)
@@ -1255,6 +1443,148 @@ allelic.info$cell_names <- as.factor(allelic.info$cell_names)
 allelic.info[[new.col.names[1]]] <- as.factor(allelic.info[[new.col.names[1]]])
 allelic.info[[new.col.names[2]]] <- as.factor(allelic.info[[new.col.names[2]]])
 
+tree.info.cna$cell_num <- as.factor(tree.info.cna$cell_num)
+tree.info.cna$coverage_mean <- as.factor(tree.info.cna$coverage_mean)
+tree.info.cna$coverage_variance <- as.factor(tree.info.cna$coverage_variance)
+tree.info.cna$dataset <- as.factor(tree.info.cna$dataset)
+tree.info.cna$tool <- as.factor(tree.info.cna$tool)
+tree.info.cna$snv_type <- as.factor(tree.info.cna$snv_type)
+tree.info.cna$tool_setup <- as.factor(tree.info.cna$tool_setup)
+tree.info.cna$max_clades <- as.numeric(tree.info.cna$max_clades)
+tree.info.cna$RF_distance <- as.numeric(tree.info.cna$RF_distance)
+tree.info.cna$normalized_RF_distance <- as.numeric(tree.info.cna$normalized_RF_distance)
+tree.info.cna$weighted_RF_distance <- as.numeric(tree.info.cna$weighted_RF_distance)
+tree.info.cna$rooted_branch_score_difference <- as.numeric(tree.info.cna$rooted_branch_score_difference)
+tree.info.cna[[new.col.names[3]]] <- as.factor(tree.info.cna[[new.col.names[3]]])
+tree.info.cna[[new.col.names[4]]] <- as.factor(tree.info.cna[[new.col.names[4]]])
+
+site.info.cna$cell_num <- as.factor(site.info.cna$cell_num)
+site.info.cna$coverage_mean <- as.factor(site.info.cna$coverage_mean)
+site.info.cna$coverage_variance <- as.factor(site.info.cna$coverage_variance)
+site.info.cna$dataset <- as.factor(site.info.cna$dataset)
+site.info.cna$tool <- as.factor(site.info.cna$tool)
+site.info.cna$snv_type <- as.factor(site.info.cna$snv_type)
+site.info.cna$tool_setup <- as.factor(site.info.cna$tool_setup)
+site.info.cna$max_clades <- as.numeric(site.info.cna$max_clades)
+site.info.cna$RF_distance <- as.numeric(site.info.cna$RF_distance)
+site.info.cna$normalized_RF_distance <- as.numeric(site.info.cna$normalized_RF_distance)
+site.info.cna$weighted_RF_distance <- as.numeric(site.info.cna$weighted_RF_distance)
+site.info.cna$rooted_branch_score_difference <- as.numeric(site.info.cna$rooted_branch_score_difference)
+site.info.cna$num_candidate_mutated_sites <- as.integer(site.info.cna$num_candidate_mutated_sites)
+site.info.cna$num_background_sites <- as.integer(site.info.cna$num_background_sites)
+site.info.cna$log10_num_background_sites <- log10(site.info.cna$num_background_sites)
+site.info.cna[[new.col.names[3]]] <- as.factor(site.info.cna[[new.col.names[3]]])
+site.info.cna[[new.col.names[4]]] <- as.factor(site.info.cna[[new.col.names[4]]])
+
+param.info.cna$cell_num <- as.factor(param.info.cna$cell_num)
+param.info.cna$coverage_mean <- as.factor(param.info.cna$coverage_mean)
+param.info.cna$coverage_variance <- as.factor(param.info.cna$coverage_variance)
+param.info.cna$dataset <- as.factor(param.info.cna$dataset)
+param.info.cna$tool <- as.factor(param.info.cna$tool)
+param.info.cna$snv_type <- as.factor(param.info.cna$snv_type)
+param.info.cna$tool_setup <- as.factor(param.info.cna$tool_setup)
+param.info.cna$eff_seq_err_rate <- as.numeric(param.info.cna$eff_seq_err_rate)
+param.info.cna$allelic_seq_cov <- as.numeric(param.info.cna$allelic_seq_cov)
+param.info.cna$allelic_seq_cov_raw_var <- as.numeric(param.info.cna$allelic_seq_cov_raw_var)
+param.info.cna$ado_rate <- as.numeric(param.info.cna$ado_rate)
+param.info.cna$gamma_shape <- as.numeric(param.info.cna$gamma_shape)
+param.info.cna$wild_overdispersion <- as.numeric(param.info.cna$wild_overdispersion)
+param.info.cna$alternative_overdispersion <- as.numeric(param.info.cna$alternative_overdispersion)
+param.info.cna$zygosity_rate <- as.numeric(param.info.cna$zygosity_rate)
+param.info.cna$estimates_type <- as.factor(param.info.cna$estimates_type)
+param.info.cna$deletion_rate <- as.numeric(param.info.cna$deletion_rate)
+param.info.cna$insertion_rate <- as.numeric(param.info.cna$insertion_rate)
+param.info.cna$population_size <- as.numeric(param.info.cna$population_size)
+param.info.cna[[new.col.names[3]]] <- as.factor(param.info.cna[[new.col.names[3]]])
+param.info.cna[[new.col.names[4]]] <- as.factor(param.info.cna[[new.col.names[4]]])
+
+var.info.cna$cell_num <- as.factor(var.info.cna$cell_num)
+var.info.cna$coverage_mean <- as.factor(var.info.cna$coverage_mean)
+var.info.cna$coverage_variance <- as.factor(var.info.cna$coverage_variance)
+var.info.cna$dataset <- as.factor(var.info.cna$dataset)
+var.info.cna$tool <- as.factor(var.info.cna$tool)
+var.info.cna$snv_type <- as.factor(var.info.cna$snv_type)
+var.info.cna$tool_setup <- as.factor(var.info.cna$tool_setup)
+var.info.cna$true_positive <- as.numeric(var.info.cna$true_positive)
+var.info.cna$false_positive <- as.numeric(var.info.cna$false_positive)
+var.info.cna$true_negative <- as.numeric(var.info.cna$true_negative)
+var.info.cna$false_negative <- as.numeric(var.info.cna$false_negative)
+var.info.cna$recall <- as.numeric(var.info.cna$recall)
+var.info.cna$precision <- as.numeric(var.info.cna$precision)
+var.info.cna$fall_out <- as.numeric(var.info.cna$fall_out)
+var.info.cna$f1_score <- as.numeric(var.info.cna$f1_score)
+var.info.cna$true_positive_hetero_mu <- as.numeric(var.info.cna$true_positive_hetero_mu)
+var.info.cna$false_positive_hetero_mu <- as.numeric(var.info.cna$false_positive_hetero_mu)
+var.info.cna$true_negative_hetero_mu <- as.numeric(var.info.cna$true_negative_hetero_mu)
+var.info.cna$false_negative_hetero_mu <- as.numeric(var.info.cna$false_negative_hetero_mu)
+var.info.cna$recall_hetero_mu <- as.numeric(var.info.cna$recall_hetero_mu)
+var.info.cna$precision_hetero_mu <- as.numeric(var.info.cna$precision_hetero_mu)
+var.info.cna$fall_out_hetero_mu <- as.numeric(var.info.cna$fall_out_hetero_mu)
+var.info.cna$f1_score_hetero_mu <- as.numeric(var.info.cna$f1_score_hetero_mu)
+var.info.cna$true_positive_homo_mu <- as.numeric(var.info.cna$true_positive_homo_mu)
+var.info.cna$false_positive_homo_mu <- as.numeric(var.info.cna$false_positive_homo_mu)
+var.info.cna$true_negative_homo_mu <- as.numeric(var.info.cna$true_negative_homo_mu)
+var.info.cna$false_negative_homo_mu <- as.numeric(var.info.cna$false_negative_homo_mu)
+var.info.cna$recall_homo_mu <- as.numeric(var.info.cna$recall_homo_mu)
+var.info.cna$precision_homo_mu <- as.numeric(var.info.cna$precision_homo_mu)
+var.info.cna$fall_out_homo_mu <- as.numeric(var.info.cna$fall_out_homo_mu)
+var.info.cna$f1_score_homo_mu <- as.numeric(var.info.cna$f1_score_homo_mu)
+var.info.cna[[new.col.names[3]]] <- as.factor(var.info.cna[[new.col.names[3]]])
+var.info.cna[[new.col.names[4]]] <- as.factor(var.info.cna[[new.col.names[4]]])
+var.info.cna <- var.info.cna %>%
+  mutate(prop_true_homo_ref_as_hetero_mu_in_called_pos = (false_positive_hetero_mu - true_homo_mu_as_hetero_mu) / (false_positive_hetero_mu + true_positive_hetero_mu)) %>%
+  mutate(prop_true_homo_mu_as_hetero_mu_in_called_pos = true_homo_mu_as_hetero_mu / (false_positive_hetero_mu + true_positive_hetero_mu))
+
+ado.info.cna$cell_num <- as.factor(ado.info.cna$cell_num)
+ado.info.cna$coverage_mean <- as.factor(ado.info.cna$coverage_mean)
+ado.info.cna$coverage_variance <- as.factor(ado.info.cna$coverage_variance)
+ado.info.cna$dataset <- as.factor(ado.info.cna$dataset)
+ado.info.cna$tool <- as.factor(ado.info.cna$tool)
+ado.info.cna$snv_type <- as.factor(ado.info.cna$snv_type)
+ado.info.cna$tool_setup <- as.factor(ado.info.cna$tool_setup)
+ado.info.cna$true_positive <- as.numeric(ado.info.cna$true_positive)
+ado.info.cna$false_positive <- as.numeric(ado.info.cna$false_positive)
+ado.info.cna$true_negative <- as.numeric(ado.info.cna$true_negative)
+ado.info.cna$false_negative <- as.numeric(ado.info.cna$false_negative)
+ado.info.cna$recall <- as.numeric(ado.info.cna$recall)
+ado.info.cna$precision <- as.numeric(ado.info.cna$precision)
+ado.info.cna$fall_out <- as.numeric(ado.info.cna$fall_out)
+ado.info.cna$f1_score <- as.numeric(ado.info.cna$f1_score)
+ado.info.cna$true_positive_one_ado <- as.numeric(ado.info.cna$true_positive_one_ado)
+ado.info.cna$false_positive_one_ado <- as.numeric(ado.info.cna$false_positive_one_ado)
+ado.info.cna$true_negative_one_ado <- as.numeric(ado.info.cna$true_negative_one_ado)
+ado.info.cna$false_negative_one_ado <- as.numeric(ado.info.cna$false_negative_one_ado)
+ado.info.cna$recall_one_ado <- as.numeric(ado.info.cna$recall_one_ado)
+ado.info.cna$precision_one_ado <- as.numeric(ado.info.cna$precision_one_ado)
+ado.info.cna$fall_out_one_ado <- as.numeric(ado.info.cna$fall_out_one_ado)
+ado.info.cna$f1_score_one_ado <- as.numeric(ado.info.cna$f1_score_one_ado)
+ado.info.cna[[new.col.names[3]]] <- as.factor(ado.info.cna[[new.col.names[3]]])
+ado.info.cna[[new.col.names[4]]] <- as.factor(ado.info.cna[[new.col.names[4]]])
+
+allelic.info.cna$cell_num <- as.factor(allelic.info.cna$cell_num)
+allelic.info.cna$coverage_mean <- as.factor(allelic.info.cna$coverage_mean)
+allelic.info.cna$coverage_variance <- as.factor(allelic.info.cna$coverage_variance)
+allelic.info.cna$dataset <- as.factor(allelic.info.cna$dataset)
+allelic.info.cna$tool <- as.factor(allelic.info.cna$tool)
+allelic.info.cna$tool_setup <- as.factor(allelic.info.cna$tool_setup)
+allelic.info.cna$cell_names <- as.factor(allelic.info.cna$cell_names)
+allelic.info.cna[[new.col.names[3]]] <- as.factor(allelic.info.cna[[new.col.names[3]]])
+allelic.info.cna[[new.col.names[4]]] <- as.factor(allelic.info.cna[[new.col.names[4]]])
+
+efficiency$s <- as.numeric(efficiency$s)
+efficiency$m <- efficiency$s / 60
+efficiency$max_rss <- as.numeric(efficiency$max_rss)
+efficiency$max_vms <- as.numeric(efficiency$max_vms)
+efficiency$max_uss <- as.numeric(efficiency$max_uss)
+efficiency$max_pss <- as.numeric(efficiency$max_pss)
+efficiency$io_out <- as.numeric(efficiency$io_out)
+efficiency$mean_load <- as.numeric(efficiency$mean_load)
+efficiency$cpu_time <- as.numeric(efficiency$cpu_time)
+efficiency$tool <- as.factor(efficiency$tool)
+efficiency$dataset <- as.factor(efficiency$dataset)
+efficiency$tool_setup <- as.factor(efficiency$tool_setup)
+efficiency$cell_num <- as.factor(efficiency$cell_num)
+
 # Rename tools.
 tree.info <- tree.info %>%
   mutate(tool = case_when(
@@ -1304,6 +1634,62 @@ allelic.info <- allelic.info %>%
     grepl("^sieve", tool, ignore.case = TRUE, fixed = FALSE) ~ sub("^sieve", "SIEVE", tool, fixed = FALSE),
   ))
 
+tree.info.cna <- tree.info.cna %>%
+  mutate(tool = case_when(
+    grepl("^cellphy", tool, ignore.case = TRUE, fixed = FALSE) ~ sub("^cellphy", "CellPhy", x = tool, fixed = FALSE),
+    grepl("^sciphi", tool, ignore.case = TRUE, fixed = FALSE) ~ sub("^sciphi", "SCIPhI", tool, fixed = FALSE),
+    grepl("^sieve", tool, ignore.case = TRUE, fixed = FALSE) ~ sub("^sieve", "SIEVE", tool, fixed = FALSE),
+    grepl("^sifit", tool, ignore.case = TRUE, fixed = FALSE) ~ sub("^sifit", "SiFit", tool, fixed = FALSE)
+  ))
+
+site.info.cna <- site.info.cna %>%
+  mutate(tool = case_when(
+    grepl("^cellphy", tool, ignore.case = TRUE, fixed = FALSE) ~ sub("^cellphy", "CellPhy", x = tool, fixed = FALSE),
+    grepl("^sciphi", tool, ignore.case = TRUE, fixed = FALSE) ~ sub("^sciphi", "SCIPhI", tool, fixed = FALSE),
+    grepl("^sieve", tool, ignore.case = TRUE, fixed = FALSE) ~ sub("^sieve", "SIEVE", tool, fixed = FALSE),
+    grepl("^sifit", tool, ignore.case = TRUE, fixed = FALSE) ~ sub("^sifit", "SiFit", tool, fixed = FALSE)
+  ))
+
+param.info.cna <- param.info.cna %>%
+  mutate(tool = case_when(
+    grepl("^cellphy", tool, ignore.case = TRUE, fixed = FALSE) ~ sub("^cellphy", "CellPhy", x = tool, fixed = FALSE),
+    grepl("^sciphi", tool, ignore.case = TRUE, fixed = FALSE) ~ sub("^sciphi", "SCIPhI", tool, fixed = FALSE),
+    grepl("^sieve", tool, ignore.case = TRUE, fixed = FALSE) ~ sub("^sieve", "SIEVE", tool, fixed = FALSE),
+    grepl("^sifit", tool, ignore.case = TRUE, fixed = FALSE) ~ sub("^sifit", "SiFit", tool, fixed = FALSE)
+  ))
+
+var.info.cna <- var.info.cna %>%
+  mutate(tool = case_when(
+    grepl("^sciphi", tool, ignore.case = TRUE, fixed = FALSE) ~ sub("^sciphi", "SCIPhI", tool, fixed = FALSE),
+    grepl("^sieve", tool, ignore.case = TRUE, fixed = FALSE) ~ sub("^sieve", "SIEVE", tool, fixed = FALSE),
+    grepl("^monovar", tool, ignore.case = TRUE, fixed = FALSE) ~ sub("^monovar", "Monovar", tool, fixed = FALSE)
+  ))
+
+ado.info.cna <- ado.info.cna %>%
+  mutate(tool = case_when(
+    grepl("^sieve", tool, ignore.case = TRUE, fixed = FALSE) ~ sub("^sieve", "SIEVE", tool, fixed = FALSE),
+  ))
+
+allelic.info.cna <- allelic.info.cna %>%
+  mutate(tool = case_when(
+    grepl("^sieve", tool, ignore.case = TRUE, fixed = FALSE) ~ sub("^sieve", "SIEVE", tool, fixed = FALSE),
+  ))
+
+efficiency <- efficiency %>%
+  mutate(
+    tool = case_when(
+      grepl("sieve", tool, ignore.case = TRUE) ~ paste(
+        sub("^sieve", "SIEVE", tool, fixed = FALSE),
+        if_else(grepl("-", tool_setup, fixed = TRUE), "stage 2", "stage 1")
+      ),
+      grepl("^cellphy", tool, ignore.case = TRUE, fixed = FALSE) ~ sub("^cellphy", "CellPhy", x = tool, fixed = FALSE),
+      grepl("^sciphi", tool, ignore.case = TRUE, fixed = FALSE) ~ sub("^sciphi", "SCIPhI", tool, fixed = FALSE),
+      grepl("^monovar", tool, ignore.case = TRUE, fixed = FALSE) ~ sub("^monovar", "Monovar", tool, fixed = FALSE),
+      grepl("^sifit", tool, ignore.case = TRUE, fixed = FALSE) ~ sub("^sifit", "SiFit", tool, fixed = FALSE)
+    )
+  ) %>%
+  select(-tool_setup)
+
 
 # Filter out some tools.
 tree.info <- tree.info %>%
@@ -1321,6 +1707,21 @@ fsa.var.info <- fsa.var.info %>%
 ado.info <- ado.info %>%
   filter(tool_setup != "none_univ")
 
+tree.info.cna <- tree.info.cna %>%
+  filter(tool == "CellPhy" | tool == "SCIPhI" | tool == "SiFit" | tool_setup != "none_univ")
+
+param.info.cna <- param.info.cna %>%
+  filter(tool == "CellPhy" | tool == "SCIPhI" | tool == "SiFit" | tool_setup == "none_univ")
+
+var.info.cna <- var.info.cna %>%
+  filter(tool == "SCIPhI" | tool == "MonoVar" | tool_setup != "none_univ")
+
+ado.info.cna <- ado.info.cna %>%
+  filter(tool_setup != "none_univ")
+
+efficiency <- efficiency %>%
+  filter(tool != "Monovar")
+
 # process tool names
 
 # rename legends of tools if necessary and replace 'tool' column
@@ -1330,6 +1731,12 @@ tree.info$tool <- as.factor(tree.info$tool)
 tree.info.pretiffied <- prettify.colors(levels(tree.info$tool))
 tree.info$tool <- factor(tree.info$tool, levels = tree.info.pretiffied[["tool"]])
 
+tree.info.cna$tool <- rename.tools(tree.info.cna[c("tool", "snv_type", "tool_setup")])
+# set colors
+tree.info.cna$tool <- as.factor(tree.info.cna$tool)
+tree.info.cna.pretiffied <- prettify.colors(levels(tree.info.cna$tool))
+tree.info.cna$tool <- factor(tree.info.cna$tool, levels = tree.info.cna.pretiffied[["tool"]])
+
 # rename legends of tools if necessary and replace 'tool' column
 site.info$tool <- rename.tools(site.info[c("tool", "snv_type", "tool_setup")])
 # set colors
@@ -1337,12 +1744,24 @@ site.info$tool <- as.factor(site.info$tool)
 site.info.pretiffied <- prettify.colors(levels(site.info$tool))
 site.info$tool <- factor(site.info$tool, levels = site.info.pretiffied[["tool"]])
 
+site.info.cna$tool <- rename.tools(site.info.cna[c("tool", "snv_type", "tool_setup")])
+# set colors
+site.info.cna$tool <- as.factor(site.info.cna$tool)
+site.info.cna.pretiffied <- prettify.colors(levels(site.info.cna$tool))
+site.info.cna$tool <- factor(site.info.cna$tool, levels = site.info.cna.pretiffied[["tool"]])
+
 # rename legends of tools if necessary and replace 'tool' column
 param.info$tool <- rename.tools(param.info[c("tool", "snv_type", "tool_setup")])
 # set colors
 param.info$tool <- as.factor(param.info$tool)
 param.info.pretiffied <- prettify.colors(levels(param.info$tool))
 param.info$tool <- factor(param.info$tool, levels = param.info.pretiffied[["tool"]])
+
+param.info.cna$tool <- rename.tools(param.info.cna[c("tool", "snv_type", "tool_setup")])
+# set colors
+param.info.cna$tool <- as.factor(param.info.cna$tool)
+param.info.cna.pretiffied <- prettify.colors(levels(param.info.cna$tool))
+param.info.cna$tool <- factor(param.info.cna$tool, levels = param.info.cna.pretiffied[["tool"]])
 
 # rename legends of tools if necessary and replace 'tool' column
 var.info$tool <- rename.tools(var.info[c("tool", "tool_setup")])
@@ -1463,12 +1882,24 @@ parallel.mut.prop <- parallel.mut %>%
   ) %>%
   arrange(mutation_rate)
 
+var.info.cna$tool <- rename.tools(var.info.cna[c("tool", "tool_setup")])
+# set colors
+var.info.cna$tool <- as.factor(var.info.cna$tool)
+var.info.cna.pretiffied <- prettify.colors(levels(var.info.cna$tool))
+var.info.cna$tool <- factor(var.info.cna$tool, levels = var.info.cna.pretiffied[["tool"]])
+
 # rename legends of tools if necessary and replace 'tool' column
 ado.info$tool <- rename.tools(ado.info[c("tool", "tool_setup")])
 # set colors
 ado.info$tool <- as.factor(ado.info$tool)
 ado.info.pretiffied <- prettify.colors(levels(ado.info$tool))
 ado.info$tool <- factor(ado.info$tool, levels = ado.info.pretiffied[["tool"]])
+
+ado.info.cna$tool <- rename.tools(ado.info.cna[c("tool", "tool_setup")])
+# set colors
+ado.info.cna$tool <- as.factor(ado.info.cna$tool)
+ado.info.cna.pretiffied <- prettify.colors(levels(ado.info.cna$tool))
+ado.info.cna$tool <- factor(ado.info.cna$tool, levels = ado.info.cna.pretiffied[["tool"]])
 
 # rename legends of tools if necessary and replace 'tool' column
 allelic.info$tool <- rename.tools(allelic.info[c("tool", "tool_setup")])
@@ -1477,10 +1908,26 @@ allelic.info$tool <- as.factor(allelic.info$tool)
 allelic.info.pretiffied <- prettify.colors(levels(allelic.info$tool))
 allelic.info$tool <- factor(allelic.info$tool, levels = allelic.info.pretiffied[["tool"]])
 
+allelic.info.cna$tool <- rename.tools(allelic.info.cna[c("tool", "tool_setup")])
+# set colors
+allelic.info.cna$tool <- as.factor(allelic.info.cna$tool)
+allelic.info.cna.pretiffied <- prettify.colors(levels(allelic.info.cna$tool))
+allelic.info.cna$tool <- factor(allelic.info.cna$tool, levels = allelic.info.cna.pretiffied[["tool"]])
+
+efficiency$tool <- as.factor(efficiency$tool)
+efficiency.pretiffied <- prettify.colors(levels(efficiency$tool))
+efficiency$tool <- factor(efficiency$tool, levels = efficiency.pretiffied[["tool"]])
+
 common.legend <- list(
   tool = c(tree.info.pretiffied[[1]][1:2], var.info.pretiffied[[1]]),
   color = c(tree.info.pretiffied[[2]][1:2], var.info.pretiffied[[2]]),
   fill = c(tree.info.pretiffied[[3]][1:2], var.info.pretiffied[[3]])
+)
+
+common.legend.cna <- list(
+  tool = c(tree.info.cna.pretiffied[[1]][1:2], var.info.cna.pretiffied[[1]]),
+  color = c(tree.info.cna.pretiffied[[2]][1:2], var.info.cna.pretiffied[[2]]),
+  fill = c(tree.info.cna.pretiffied[[3]][1:2], var.info.cna.pretiffied[[3]])
 )
 
 data_quality_legend <- list(
@@ -1494,6 +1941,7 @@ data_quality_legend <- list(
 )
 names(data_quality_legend$color) <- c("2", "10", "20")
 names(data_quality_legend$fill) <- c("2", "10", "20")
+
 
 ###################################################
 #         Generate tree comparison graphs         #
@@ -1576,8 +2024,8 @@ normalized.rf.dist.plot <-
     panel.grid = element_blank()
   )
 
-# Tree: rooted branch score difference
-rooted.branch.score.diff.plot <-
+# Tree: branch score difference
+branch.score.diff.plot <-
   ggplot(
     tree.info[which(!is.na(tree.info$rooted_branch_score_difference)),],
     aes_(
@@ -1632,7 +2080,7 @@ rooted.branch.score.diff.plot <-
     size = 1 / .pt
   ) +
   labs(
-    y = "Rooted branch score distance",
+    y = "Branch score distance",
     x = "Mutation rate"
   ) +
   theme_bw() +
@@ -1651,7 +2099,7 @@ rooted.branch.score.diff.plot <-
     panel.grid = element_blank()
   )
 
-# Correlation of the number of background sites and the rooted branch score difference.
+# Correlation of the number of background sites and the branch score difference.
 cor.plot <- ggscatter(
     site.info,
     x = "log10_num_background_sites",
@@ -1659,7 +2107,7 @@ cor.plot <- ggscatter(
     color = new.col.names[2],
     size = 2 / .pt,
     xlab = "Log10 of number of background sites",
-    ylab = "Rooted branch score distance",
+    ylab = "Branch score distance",
     facet.by = c(
       "coverage_variance",
       "cell_num"
@@ -1846,6 +2294,155 @@ cor.plot <- ggscatter(
 #     strip.background = element_blank(),
 #     panel.grid = element_blank()
 #   )
+
+# Tree: normalized RF distance (with CNAs)
+normalized.rf.dist.cna.plot <-
+  ggplot(
+    tree.info.cna,
+    aes_(
+      x = as.name(new.col.names[3]),
+      y = ~normalized_RF_distance
+    )
+  ) +
+  geom_boxplot(
+    lwd = 1 / .pt,
+    fatten = 1.2 / .pt,
+    alpha = 1.0,
+    outlier.alpha = 1.0,
+    outlier.size = dot.size,
+    outlier.shape = NA,
+    aes_(
+      fill = ~tool,
+      color = ~tool
+    )
+  ) +
+  scale_fill_manual(
+    name = "Method",
+    breaks = tree.info.cna.pretiffied[[1]],
+    values = tree.info.cna.pretiffied[[3]]
+  ) +
+  scale_color_manual(
+    name = "Method",
+    breaks = tree.info.cna.pretiffied[[1]],
+    values = tree.info.cna.pretiffied[[2]]
+  ) +
+  geom_point(
+    position = position_jitterdodge(),
+    aes_(color = ~tool),
+    size = dot.size,
+    alpha = 0.5
+  ) +
+  facet_wrap(
+    as.name(new.col.names[4]),
+    labeller = labeller(
+      .cols = cna.sites.prop.labels
+    ),
+    scales = "free_x"
+  ) +
+  scale_x_discrete(
+    breaks = levels(tree.info.cna[[new.col.names[3]]]),
+    label = cna.status.labels
+  ) +
+  ylim(0, 0.5) +
+  geom_hline(
+    yintercept = 0,
+    linetype="dashed",
+    color = "gray43",
+    size = 1 / .pt
+  ) +
+  labs(
+    y = "Normalised Robinson-Foulds distance",
+    x = "CNA sites in input data"
+  ) +
+  theme_bw() +
+  theme(
+    text = element_text(size = 7),
+    axis.text = element_text(size = 7),
+    legend.text = element_text(size = 6),
+    legend.title = element_text(size = 6),
+    legend.title.align = 0.5,
+    legend.box.spacing = unit(0.3, "mm"),
+    legend.position = "bottom",
+    legend.key.size = unit(4, 'mm'),
+    strip.text = strip.text,
+    strip.background = element_blank(),
+    panel.grid = element_blank()
+  )
+
+# Tree: branch score difference (with CNAs)
+branch.score.diff.cna.plot <-
+  ggplot(
+    tree.info.cna[which(!is.na(tree.info.cna$rooted_branch_score_difference)),],
+    aes_(
+      x = as.name(new.col.names[3]),
+      y = ~rooted_branch_score_difference
+    )
+  ) +
+  geom_boxplot(
+    lwd = 1 / .pt,
+    fatten = 1.2 / .pt,
+    alpha = 1.0,
+    outlier.alpha = 1.0,
+    outlier.size = dot.size,
+    outlier.shape = NA,
+    aes_(
+      fill = ~tool,
+      color = ~tool
+    )
+  ) +
+  scale_fill_manual(
+    name = "Method",
+    breaks = tree.info.cna.pretiffied[[1]],
+    values = tree.info.cna.pretiffied[[3]]
+  ) +
+  scale_color_manual(
+    name = "Method",
+    breaks = tree.info.cna.pretiffied[[1]],
+    values = tree.info.cna.pretiffied[[2]]
+  ) +
+  geom_point(
+    position = position_jitterdodge(),
+    aes_(color = ~tool),
+    size = dot.size,
+    alpha = 0.5
+  ) +
+  facet_wrap(
+    as.name(new.col.names[4]),
+    labeller = labeller(
+      .cols = cna.sites.prop.labels
+    ),
+    scales = "free_x"
+  ) +
+  scale_x_discrete(
+    breaks = levels(tree.info.cna[[new.col.names[3]]]),
+    label = cna.status.labels
+  ) +
+  ylim(0, 0.7) +
+  geom_hline(
+    yintercept = 0,
+    linetype="dashed",
+    color = "gray43",
+    size = 1 / .pt
+  ) +
+  labs(
+    y = "Branch score distance",
+    x = "CNA sites in input data"
+  ) +
+  theme_bw() +
+  theme(
+    text = element_text(size = 7),
+    axis.text = element_text(size = 7),
+    legend.text = element_text(size = 6),
+    legend.title = element_text(size = 6),
+    legend.title.align = 0.5,
+    legend.box.spacing = unit(0.3, "mm"),
+    legend.position = "bottom",
+    legend.key.size = unit(4, 'mm'),
+    strip.text = strip.text,
+    strip.text.y = element_blank(),
+    strip.background = element_blank(),
+    panel.grid = element_blank()
+  )
 
 # Parameters: ado rate
 ado.rate.plot <- ggplot(
@@ -2148,7 +2745,6 @@ alt.overdispersion.plot <- ggplot(
     strip.background = element_blank(),
     panel.grid = element_blank()
   )
-
 
 # Variant calling: mutation plot
 # recall
@@ -2454,6 +3050,311 @@ fallout.plot <- ggplot(
     panel.grid = element_blank()
   )
 
+# Variant calling: mutation plot (with CNAs)
+# recall (with CNAs)
+recall.cna.plot <- ggplot(
+  var.info.cna[which(!is.na(var.info.cna$recall)),],
+  aes_(
+    x = as.name(new.col.names[3]),
+    y = ~recall
+  )
+) +
+  geom_boxplot(
+    lwd = 1 / .pt,
+    fatten = 1.2 / .pt,
+    alpha = 1.0,
+    outlier.alpha = 1.0,
+    outlier.size = dot.size,
+    outlier.shape = NA,
+    aes_(
+      fill = ~tool,
+      color = ~tool
+    )
+  ) +
+  scale_fill_manual(
+    name = "Method",
+    breaks = var.info.cna.pretiffied[[1]],
+    values = var.info.cna.pretiffied[[3]]
+  ) +
+  scale_color_manual(
+    name = "Method",
+    breaks = var.info.cna.pretiffied[[1]],
+    values = var.info.cna.pretiffied[[2]]
+  ) +
+  geom_point(
+    position = position_jitterdodge(),
+    aes_(color = ~tool),
+    size = dot.size,
+    alpha = 0.5
+  ) +
+  facet_wrap(
+    as.name(new.col.names[4]),
+    labeller = labeller(
+      .cols = cna.sites.prop.labels
+    ),
+    scales = "free_x"
+  ) +
+  scale_x_discrete(
+    breaks = levels(tree.info.cna[[new.col.names[3]]]),
+    label = cna.status.labels
+  ) +
+  ylim(0.7, 1.0) +
+  geom_hline(
+    yintercept = 1,
+    linetype="dashed",
+    color = "gray43",
+    size = 1 / .pt
+  ) +
+  labs(
+    y = "Recall",
+    x = "Mutation rate"
+  ) +
+  theme_bw() +
+  theme(
+    text = element_text(size = 7),
+    axis.text = element_text(size = 7),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.title.x = element_blank(),
+    legend.text = element_text(size = 6),
+    legend.title = element_text(size = 6),
+    legend.title.align = 0.5,
+    legend.box.spacing = unit(0.3, "mm"),
+    legend.position = "bottom",
+    legend.key.size = unit(4, 'mm'),
+    strip.text = strip.text,
+    strip.text.y = element_blank(),
+    strip.background = element_blank(),
+    panel.grid = element_blank()
+  )
+
+# precision (with CNAs)
+precision.cna.plot <- ggplot(
+  var.info.cna[which(!is.na(var.info.cna$precision)),],
+  aes_(
+    x = as.name(new.col.names[3]),
+    y = ~precision
+  )
+) +
+  geom_boxplot(
+    lwd = 1 / .pt,
+    fatten = 1.2 / .pt,
+    alpha = 1.0,
+    outlier.alpha = 1.0,
+    outlier.size = dot.size,
+    outlier.shape = NA,
+    aes_(
+      fill = ~tool,
+      color = ~tool
+    )
+  ) +
+  scale_fill_manual(
+    name = "Method",
+    breaks = var.info.cna.pretiffied[[1]],
+    values = var.info.cna.pretiffied[[3]]
+  ) +
+  scale_color_manual(
+    name = "Method",
+    breaks = var.info.cna.pretiffied[[1]],
+    values = var.info.cna.pretiffied[[2]]
+  ) +
+  geom_point(
+    position = position_jitterdodge(),
+    aes_(color = ~tool),
+    size = dot.size,
+    alpha = 0.5
+  ) +
+  facet_wrap(
+    as.name(new.col.names[4]),
+    labeller = labeller(
+      .cols = cna.sites.prop.labels
+    ),
+    scales = "free_x"
+  ) +
+  scale_x_discrete(
+    breaks = levels(tree.info.cna[[new.col.names[3]]]),
+    label = cna.status.labels
+  ) +
+  ylim(0.9, 1.0) +
+  geom_hline(
+    yintercept = 1,
+    linetype="dashed",
+    color = "gray43",
+    size = 1 / .pt
+  ) +
+  labs(
+    y = "Precision",
+    x = "CNA sites in input data"
+  ) +
+  theme_bw() +
+  theme(
+    text = element_text(size = 7),
+    axis.text = element_text(size = 7),
+    legend.text = element_text(size = 6),
+    legend.title = element_text(size = 6),
+    legend.title.align = 0.5,
+    legend.box.spacing = unit(0.3, "mm"),
+    legend.position = "bottom",
+    legend.key.size = unit(4, 'mm'),
+    strip.text = strip.text,
+    strip.text.x = element_blank(),
+    strip.text.y = element_blank(),
+    strip.background = element_blank(),
+    panel.grid = element_blank()
+  )
+
+# f1 score (with CNAs)
+f1.score.cna.plot <- ggplot(
+  var.info.cna[which(!is.na(var.info.cna$f1_score)),],
+  aes_(
+    x = as.name(new.col.names[3]),
+    y = ~f1_score
+  )
+) +
+  geom_boxplot(
+    lwd = 1 / .pt,
+    fatten = 1.2 / .pt,
+    alpha = 1.0,
+    outlier.alpha = 1.0,
+    outlier.size = dot.size,
+    outlier.shape = NA,
+    aes_(
+      fill = ~tool,
+      color = ~tool
+    )
+  ) +
+  scale_fill_manual(
+    name = "Method",
+    breaks = var.info.cna.pretiffied[[1]],
+    values = var.info.cna.pretiffied[[3]]
+  ) +
+  scale_color_manual(
+    name = "Method",
+    breaks = var.info.cna.pretiffied[[1]],
+    values = var.info.cna.pretiffied[[2]]
+  ) +
+  geom_point(
+    position = position_jitterdodge(),
+    aes_(color = ~tool),
+    size = dot.size,
+    alpha = 0.5
+  ) +
+  facet_wrap(
+    as.name(new.col.names[4]),
+    labeller = labeller(
+      .cols = cna.sites.prop.labels
+    ),
+    scales = "free_x"
+  ) +
+  scale_x_discrete(
+    breaks = levels(tree.info.cna[[new.col.names[3]]]),
+    label = cna.status.labels
+  ) +
+  ylim(0.8, 1.0) +
+  geom_hline(
+    yintercept = 1,
+    linetype="dashed",
+    color = "gray43",
+    size = 1 / .pt
+  ) +
+  labs(
+    y = "F1 score",
+    x = "CNA sites in input data"
+  ) +
+  theme_bw() +
+  theme(
+    text = element_text(size = 7),
+    axis.text = element_text(size = 7),
+    legend.text = element_text(size = 6),
+    legend.title = element_text(size = 6),
+    legend.title.align = 0.5,
+    legend.box.spacing = unit(0.3, "mm"),
+    legend.position = "bottom",
+    legend.key.size = unit(4, 'mm'),
+    strip.text = strip.text,
+    strip.text.x = element_blank(),
+    strip.text.y = element_blank(),
+    strip.background = element_blank(),
+    panel.grid = element_blank()
+  )
+
+# fallout (with CNAs)
+fallout.cna.plot <- ggplot(
+  var.info.cna[which(!is.na(var.info.cna$fall_out)),],
+  aes_(
+    x = as.name(new.col.names[3]),
+    y = ~fall_out
+  )
+) +
+  geom_boxplot(
+    lwd = 1 / .pt,
+    fatten = 1.2 / .pt,
+    alpha = 1.0,
+    outlier.alpha = 1.0,
+    outlier.size = dot.size,
+    outlier.shape = NA,
+    aes_(
+      fill = ~tool,
+      color = ~tool
+    )
+  ) +
+  scale_fill_manual(
+    name = "Method",
+    breaks = var.info.cna.pretiffied[[1]],
+    values = var.info.cna.pretiffied[[3]]
+  ) +
+  scale_color_manual(
+    name = "Method",
+    breaks = var.info.cna.pretiffied[[1]],
+    values = var.info.cna.pretiffied[[2]]
+  ) +
+  geom_point(
+    position = position_jitterdodge(),
+    aes_(color = ~tool),
+    size = dot.size,
+    alpha = 0.5
+  ) +
+  facet_wrap(
+    as.name(new.col.names[4]),
+    labeller = labeller(
+      .cols = cna.sites.prop.labels
+    ),
+    scales = "free_x"
+  ) +
+  scale_x_discrete(
+    breaks = levels(tree.info.cna[[new.col.names[3]]]),
+    label = cna.status.labels
+  ) +
+  ylim(0, 0.015) +
+  geom_hline(
+    yintercept = 0,
+    linetype="dashed",
+    color = "gray43",
+    size = 1 / .pt
+  ) +
+  labs(
+    y = "False positive rate",
+    x = "CNA sites in input data"
+  ) +
+  theme_bw() +
+  theme(
+    text = element_text(size = 7),
+    axis.text = element_text(size = 7),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.title.x = element_blank(),
+    legend.text = element_text(size = 6),
+    legend.title = element_text(size = 6),
+    legend.title.align = 0.5,
+    legend.box.spacing = unit(0.3, "mm"),
+    legend.position = "bottom",
+    legend.key.size = unit(4, 'mm'),
+    strip.text = strip.text,
+    strip.text.y = element_blank(),
+    strip.background = element_blank(),
+    panel.grid = element_blank()
+  )
+
 # Variant calling: heterozygous mutation plot
 # recall
 hetero.recall.plot <- ggplot(
@@ -2741,6 +3642,312 @@ hetero.fallout.plot <- ggplot(
   labs(
     y = "False positive rate",
     x = "Mutation rate"
+  ) +
+  theme_bw() +
+  theme(
+    text = element_text(size = 7),
+    axis.text = element_text(size = 7),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.title.x = element_blank(),
+    legend.text = element_text(size = 6),
+    legend.title = element_text(size = 6),
+    legend.title.align = 0.5,
+    legend.box.spacing = unit(0.3, "mm"),
+    legend.position = "bottom",
+    legend.key.size = unit(4, 'mm'),
+    strip.text = strip.text,
+    strip.text.y = element_blank(),
+    strip.background = element_blank(),
+    panel.grid = element_blank()
+  )
+
+# Variant calling: heterozygous mutation plot (with CNAs)
+# recall (with CNAs)
+hetero.recall.cna.plot <- ggplot(
+  var.info.cna[which(!is.na(var.info.cna$recall_hetero_mu)),],
+  aes_(
+    x = as.name(new.col.names[3]),
+    y = ~recall_hetero_mu
+  )
+) +
+  geom_boxplot(
+    lwd = 1 / .pt,
+    fatten = 1.2 / .pt,
+    alpha = 1.0,
+    outlier.alpha = 1.0,
+    outlier.size = dot.size,
+    outlier.shape = NA,
+    aes_(
+      fill = ~tool,
+      color = ~tool
+    )
+  ) +
+  scale_fill_manual(
+    name = "Method",
+    breaks = var.info.cna.pretiffied[[1]],
+    values = var.info.cna.pretiffied[[3]]
+  ) +
+  scale_color_manual(
+    name = "Method",
+    breaks = var.info.cna.pretiffied[[1]],
+    values = var.info.cna.pretiffied[[2]]
+  ) +
+  geom_point(
+    position = position_jitterdodge(),
+    aes_(color = ~tool),
+    size = dot.size,
+    alpha = 0.5
+  ) +
+  facet_wrap(
+    as.name(new.col.names[4]),
+    labeller = labeller(
+      .cols = cna.sites.prop.labels
+    ),
+    scales = "free_x"
+  ) +
+  scale_x_discrete(
+    breaks = levels(tree.info.cna[[new.col.names[3]]]),
+    label = cna.status.labels
+  ) +
+  ylim(0.6, 1.0) +
+  geom_hline(
+    yintercept = 1,
+    linetype="dashed",
+    color = "gray43",
+    size = 1 / .pt
+  ) +
+  labs(
+    y = "Recall",
+    x = "CNA sites in input data"
+  ) +
+  theme_bw() +
+  theme(
+    text = element_text(size = 7),
+    axis.text = element_text(size = 7),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.title.x = element_blank(),
+    legend.text = element_text(size = 6),
+    legend.title = element_text(size = 6),
+    legend.title.align = 0.5,
+    legend.box.spacing = unit(0.3, "mm"),
+    legend.position = "bottom",
+    legend.key.size = unit(4, 'mm'),
+    strip.text = strip.text,
+    strip.text.y = element_blank(),
+    strip.background = element_blank(),
+    panel.grid = element_blank()
+  )
+
+# precision (with CNAs)
+hetero.precision.cna.plot <- ggplot(
+  var.info.cna[which(!is.na(var.info.cna$precision_hetero_mu)),],
+  aes_(
+    x = as.name(new.col.names[3]),
+    y = ~precision_hetero_mu
+  )
+) +
+  geom_boxplot(
+    lwd = 1 / .pt,
+    fatten = 1.2 / .pt,
+    alpha = 1.0,
+    outlier.alpha = 1.0,
+    outlier.size = dot.size,
+    outlier.shape = NA,
+    aes_(
+      fill = ~tool,
+      color = ~tool
+    )
+  ) +
+  scale_fill_manual(
+    name = "Method",
+    breaks = var.info.cna.pretiffied[[1]],
+    values = var.info.cna.pretiffied[[3]]
+  ) +
+  scale_color_manual(
+    name = "Method",
+    breaks = var.info.cna.pretiffied[[1]],
+    values = var.info.cna.pretiffied[[2]]
+  ) +
+  geom_point(
+    position = position_jitterdodge(),
+    aes_(color = ~tool),
+    size = dot.size,
+    alpha = 0.5
+  ) +
+  facet_wrap(
+    as.name(new.col.names[4]),
+    labeller = labeller(
+      .cols = cna.sites.prop.labels
+    ),
+    scales = "free_x"
+  ) +
+  scale_x_discrete(
+    breaks = levels(tree.info.cna[[new.col.names[3]]]),
+    label = cna.status.labels
+  ) +
+  ylim(0.9, 1.0) +
+  geom_hline(
+    yintercept = 1,
+    linetype="dashed",
+    color = "gray43",
+    size = 1 / .pt
+  ) +
+  labs(
+    y = "Precision",
+    x = "CNA sites in input data"
+  ) +
+  theme_bw() +
+  theme(
+    text = element_text(size = 7),
+    axis.text = element_text(size = 7),
+    legend.text = element_text(size = 6),
+    legend.title = element_text(size = 6),
+    legend.title.align = 0.5,
+    legend.box.spacing = unit(0.3, "mm"),
+    legend.position = "bottom",
+    legend.key.size = unit(4, 'mm'),
+    strip.text = strip.text,
+    strip.text.x = element_blank(),
+    strip.text.y = element_blank(),
+    strip.background = element_blank(),
+    panel.grid = element_blank(),
+    plot.margin = unit(c(0, 0, 0, 0),"mm")
+  )
+
+# f1 score (with CNAs)
+hetero.f1.score.cna.plot <- ggplot(
+  var.info.cna[which(!is.na(var.info.cna$f1_score_hetero_mu)),],
+  aes_(
+    x = as.name(new.col.names[3]),
+    y = ~f1_score_hetero_mu
+  )
+) +
+  geom_boxplot(
+    lwd = 1 / .pt,
+    fatten = 1.2 / .pt,
+    alpha = 1.0,
+    outlier.alpha = 1.0,
+    outlier.size = dot.size,
+    outlier.shape = NA,
+    aes_(
+      fill = ~tool,
+      color = ~tool
+    )
+  ) +
+  scale_fill_manual(
+    name = "Method",
+    breaks = var.info.cna.pretiffied[[1]],
+    values = var.info.cna.pretiffied[[3]]
+  ) +
+  scale_color_manual(
+    name = "Method",
+    breaks = var.info.cna.pretiffied[[1]],
+    values = var.info.cna.pretiffied[[2]]
+  ) +
+  geom_point(
+    position = position_jitterdodge(),
+    aes_(color = ~tool),
+    size = dot.size,
+    alpha = 0.5
+  ) +
+  facet_wrap(
+    as.name(new.col.names[4]),
+    labeller = labeller(
+      .cols = cna.sites.prop.labels
+    ),
+    scales = "free_x"
+  ) +
+  scale_x_discrete(
+    breaks = levels(tree.info.cna[[new.col.names[3]]]),
+    label = cna.status.labels
+  ) +
+  ylim(0.75, 1.0) +
+  geom_hline(
+    yintercept = 1,
+    linetype="dashed",
+    color = "gray43",
+    size = 1 / .pt
+  ) +
+  labs(
+    y = "F1 score",
+    x = "CNA sites in input data"
+  ) +
+  theme_bw() +
+  theme(
+    text = element_text(size = 7),
+    axis.text = element_text(size = 7),
+    legend.text = element_text(size = 6),
+    legend.title = element_text(size = 6),
+    legend.title.align = 0.5,
+    legend.box.spacing = unit(0.3, "mm"),
+    legend.key.size = unit(4, 'mm'),
+    legend.position = "bottom",
+    strip.text = strip.text,
+    strip.text.x = element_blank(),
+    strip.text.y = element_blank(),
+    strip.background = element_blank(),
+    panel.grid = element_blank()
+  )
+
+# fallout (with CNAs)
+hetero.fallout.cna.plot <- ggplot(
+  var.info.cna[which(!is.na(var.info.cna$fall_out_hetero_mu)),],
+  aes_(
+    x = as.name(new.col.names[3]),
+    y = ~fall_out_hetero_mu
+  )
+) +
+  geom_boxplot(
+    lwd = 1 / .pt,
+    fatten = 1.2 / .pt,
+    alpha = 1.0,
+    outlier.alpha = 1.0,
+    outlier.size = dot.size,
+    outlier.shape = NA,
+    aes_(
+      fill = ~tool,
+      color = ~tool
+    )
+  ) +
+  scale_fill_manual(
+    name = "Method",
+    breaks = var.info.cna.pretiffied[[1]],
+    values = var.info.cna.pretiffied[[3]]
+  ) +
+  scale_color_manual(
+    name = "Method",
+    breaks = var.info.cna.pretiffied[[1]],
+    values = var.info.cna.pretiffied[[2]]
+  ) +
+  geom_point(
+    position = position_jitterdodge(),
+    aes_(color = ~tool),
+    size = dot.size,
+    alpha = 0.5
+  ) +
+  facet_wrap(
+    as.name(new.col.names[4]),
+    labeller = labeller(
+      .cols = cna.sites.prop.labels
+    ),
+    scales = "free_x"
+  ) +
+  scale_x_discrete(
+    breaks = levels(tree.info.cna[[new.col.names[3]]]),
+    label = cna.status.labels
+  ) +
+  ylim(0, 0.008) +
+  geom_hline(
+    yintercept = 0,
+    linetype="dashed",
+    color = "gray43",
+    size = 1 / .pt
+  ) +
+  labs(
+    y = "False positive rate",
+    x = "CNA sites in input data"
   ) +
   theme_bw() +
   theme(
@@ -3057,6 +4264,312 @@ homo.fallout.plot <- ggplot(
     axis.ticks.x = element_blank(),
     axis.title.x = element_blank(),
     axis.title.y = element_blank(),
+    legend.text = element_text(size = 6),
+    legend.title = element_text(size = 6),
+    legend.title.align = 0.5,
+    legend.box.spacing = unit(0.3, "mm"),
+    legend.position = "bottom",
+    legend.key.size = unit(4, 'mm'),
+    strip.text = strip.text,
+    strip.background = element_blank(),
+    panel.grid = element_blank()
+  )
+
+# Variant calling: homozygous mutation plot (with CNAs)
+# recall (with CNAs)
+homo.recall.cna.plot <- ggplot(
+  var.info.cna[which(!is.na(var.info.cna$recall_homo_mu) & var.info.cna$tool != "SCIPhI"),],
+  aes_(
+    x = as.name(new.col.names[3]),
+    y = ~recall_homo_mu
+  )
+) +
+  geom_boxplot(
+    lwd = 1 / .pt,
+    fatten = 1.2 / .pt,
+    alpha = 1.0,
+    outlier.alpha = 1.0,
+    outlier.size = dot.size,
+    outlier.shape = NA,
+    aes_(
+      fill = ~tool,
+      color = ~tool
+    )
+  ) +
+  scale_fill_manual(
+    name = "Method",
+    breaks = var.info.cna.pretiffied[[1]][which(var.info.cna.pretiffied[[1]] != "SCIPhI")],
+    values = var.info.cna.pretiffied[[3]][which(var.info.cna.pretiffied[[1]] != "SCIPhI")]
+  ) +
+  scale_color_manual(
+    name = "Method",
+    breaks = var.info.cna.pretiffied[[1]][which(var.info.cna.pretiffied[[1]] != "SCIPhI")],
+    values = var.info.cna.pretiffied[[2]][which(var.info.cna.pretiffied[[1]] != "SCIPhI")]
+  ) +
+  geom_point(
+    position = position_jitterdodge(),
+    aes_(color = ~tool),
+    size = dot.size,
+    alpha = 0.5
+  ) +
+  facet_wrap(
+    as.name(new.col.names[4]),
+    labeller = labeller(
+      .cols = cna.sites.prop.labels
+    ),
+    scales = "free_x"
+  ) +
+  scale_x_discrete(
+    breaks = levels(tree.info.cna[[new.col.names[3]]]),
+    label = cna.status.labels
+  ) +
+  ylim(0, 1) +
+  geom_hline(
+    yintercept = 1,
+    linetype="dashed",
+    color = "gray43",
+    size = 1 / .pt
+  ) +
+  labs(
+    y = "Recall",
+    x = "CNA sites in input data"
+  ) +
+  theme_bw() +
+  theme(
+    text = element_text(size = 7),
+    axis.text = element_text(size = 7),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.title.x = element_blank(),
+    # axis.title.y = element_blank(),
+    legend.text = element_text(size = 6),
+    legend.title = element_text(size = 6),
+    legend.title.align = 0.5,
+    legend.box.spacing = unit(0.3, "mm"),
+    legend.position = "bottom",
+    legend.key.size = unit(4, 'mm'),
+    strip.text = strip.text,
+    strip.background = element_blank(),
+    panel.grid = element_blank()
+  )
+
+# precision (with CNAs)
+homo.precision.cna.plot <- ggplot(
+  var.info.cna[which(!is.na(var.info.cna$precision_homo_mu) & var.info.cna$tool != "SCIPhI"),],
+  aes_(
+    x = as.name(new.col.names[3]),
+    y = ~precision_homo_mu
+  )
+) +
+  geom_boxplot(
+    lwd = 1 / .pt,
+    fatten = 1.2 / .pt,
+    alpha = 1.0,
+    outlier.alpha = 1.0,
+    outlier.size = dot.size,
+    outlier.shape = NA,
+    aes_(
+      fill = ~tool,
+      color = ~tool
+    )
+  ) +
+  scale_fill_manual(
+    name = "Method",
+    breaks = var.info.cna.pretiffied[[1]][which(var.info.cna.pretiffied[[1]] != "SCIPhI")],
+    values = var.info.cna.pretiffied[[3]][which(var.info.cna.pretiffied[[1]] != "SCIPhI")]
+  ) +
+  scale_color_manual(
+    name = "Method",
+    breaks = var.info.cna.pretiffied[[1]][which(var.info.cna.pretiffied[[1]] != "SCIPhI")],
+    values = var.info.cna.pretiffied[[2]][which(var.info.cna.pretiffied[[1]] != "SCIPhI")]
+  ) +
+  geom_point(
+    position = position_jitterdodge(),
+    aes_(color = ~tool),
+    size = dot.size,
+    alpha = 0.5
+  ) +
+  facet_wrap(
+    as.name(new.col.names[4]),
+    labeller = labeller(
+      .cols = cna.sites.prop.labels
+    ),
+    scales = "free_x"
+  ) +
+  scale_x_discrete(
+    breaks = levels(tree.info.cna[[new.col.names[3]]]),
+    label = cna.status.labels
+  ) +
+  ylim(0, 1) +
+  geom_hline(
+    yintercept = 1,
+    linetype="dashed",
+    color = "gray43",
+    size = 1 / .pt
+  ) +
+  labs(
+    y = "Precision",
+    x = "CNA sites in input data"
+  ) +
+  theme_bw() +
+  theme(
+    text = element_text(size = 7),
+    axis.text = element_text(size = 7),
+    # axis.title.y = element_blank(),
+    legend.text = element_text(size = 6),
+    legend.title = element_text(size = 6),
+    legend.title.align = 0.5,
+    legend.box.spacing = unit(0.3, "mm"),
+    legend.position = "bottom",
+    legend.key.size = unit(4, 'mm'),
+    strip.text = strip.text,
+    strip.text.x = element_blank(),
+    strip.background = element_blank(),
+    panel.grid = element_blank(),
+    plot.margin = unit(c(0, 0, 0, 0),"mm")
+  )
+
+# f1 score (with CNAs)
+homo.f1.score.cna.plot <- ggplot(
+ var.info.cna[which(!is.na(var.info.cna$f1_score_homo_mu) & var.info.cna$tool != "SCIPhI"),],
+ aes_(
+   x = as.name(new.col.names[3]),
+   y = ~f1_score_homo_mu
+ )
+) +
+  geom_boxplot(
+    lwd = 1 / .pt,
+    fatten = 1.2 / .pt,
+    alpha = 1.0,
+    outlier.alpha = 1.0,
+    outlier.size = dot.size,
+    outlier.shape = NA,
+    aes_(
+      fill = ~tool,
+      color = ~tool
+    )
+  ) +
+  scale_fill_manual(
+    name = "Method",
+    breaks = var.info.cna.pretiffied[[1]][which(var.info.cna.pretiffied[[1]] != "SCIPhI")],
+    values = var.info.cna.pretiffied[[3]][which(var.info.cna.pretiffied[[1]] != "SCIPhI")]
+  ) +
+  scale_color_manual(
+    name = "Method",
+    breaks = var.info.cna.pretiffied[[1]][which(var.info.cna.pretiffied[[1]] != "SCIPhI")],
+    values = var.info.cna.pretiffied[[2]][which(var.info.cna.pretiffied[[1]] != "SCIPhI")]
+  ) +
+  geom_point(
+    position = position_jitterdodge(),
+    aes_(color = ~tool),
+    size = dot.size,
+    alpha = 0.5
+  ) +
+  facet_wrap(
+    as.name(new.col.names[4]),
+    labeller = labeller(
+      .cols = cna.sites.prop.labels
+    ),
+    scales = "free_x"
+  ) +
+  scale_x_discrete(
+    breaks = levels(tree.info.cna[[new.col.names[3]]]),
+    label = cna.status.labels
+  ) +
+  ylim(0, 1) +
+  geom_hline(
+    yintercept = 1,
+    linetype="dashed",
+    color = "gray43",
+    size = 1 / .pt
+  ) +
+  labs(
+    y = "F1 score",
+    x = "CNA sites in input data"
+  ) +
+  theme_bw() +
+  theme(
+    text = element_text(size = 7),
+    axis.text = element_text(size = 7),
+    # axis.title.y = element_blank(),
+    legend.text = element_text(size = 6),
+    legend.title = element_text(size = 6),
+    legend.title.align = 0.5,
+    legend.box.spacing = unit(0.3, "mm"),
+    legend.position = "none",
+    legend.key.size = unit(4, 'mm'),
+    strip.text = strip.text,
+    strip.text.x = element_blank(),
+    strip.background = element_blank(),
+    panel.grid = element_blank()
+  )
+
+# fallout (with CNAs)
+homo.fallout.cna.plot <- ggplot(
+  var.info.cna[which(!is.na(var.info.cna$fall_out_homo_mu) & var.info.cna$tool != "SCIPhI"),],
+  aes_(
+    x = as.name(new.col.names[3]),
+    y = ~fall_out_homo_mu
+  )
+) +
+  geom_boxplot(
+    lwd = 1 / .pt,
+    fatten = 1.2 / .pt,
+    alpha = 1.0,
+    outlier.alpha = 1.0,
+    outlier.size = dot.size,
+    outlier.shape = NA,
+    aes_(
+      fill = ~tool,
+      color = ~tool
+    )
+  ) +
+  scale_fill_manual(
+    name = "Method",
+    breaks = var.info.cna.pretiffied[[1]][which(var.info.cna.pretiffied[[1]] != "SCIPhI")],
+    values = var.info.cna.pretiffied[[3]][which(var.info.cna.pretiffied[[1]] != "SCIPhI")]
+  ) +
+  scale_color_manual(
+    name = "Method",
+    breaks = var.info.cna.pretiffied[[1]][which(var.info.cna.pretiffied[[1]] != "SCIPhI")],
+    values = var.info.cna.pretiffied[[2]][which(var.info.cna.pretiffied[[1]] != "SCIPhI")]
+  ) +
+  geom_point(
+    position = position_jitterdodge(),
+    aes_(color = ~tool),
+    size = dot.size,
+    alpha = 0.5
+  ) +
+  facet_wrap(
+    as.name(new.col.names[4]),
+    labeller = labeller(
+      .cols = cna.sites.prop.labels
+    ),
+    scales = "free_x"
+  ) +
+  scale_x_discrete(
+    breaks = levels(tree.info.cna[[new.col.names[3]]]),
+    label = cna.status.labels
+  ) +
+  ylim(0, 0.04) +
+  geom_hline(
+    yintercept = 0,
+    linetype="dashed",
+    color = "gray43",
+    size = 1 / .pt
+  ) +
+  labs(
+    y = "False positive rate",
+    x = "CNA sites in input data"
+  ) +
+  theme_bw() +
+  theme(
+    text = element_text(size = 7),
+    axis.text = element_text(size = 7),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.title.x = element_blank(),
+    # axis.title.y = element_blank(),
     legend.text = element_text(size = 6),
     legend.title = element_text(size = 6),
     legend.title.align = 0.5,
@@ -3516,6 +5029,115 @@ ado.fallout.plot <- ggplot(
     panel.grid = element_blank()
   )
 
+# Efficiency benchmarking
+efficiency.time.plot <-
+  ggplot(
+    efficiency,
+    aes_(
+      x = ~cell_num,
+      y = ~m
+    )
+  ) +
+  geom_boxplot(
+    lwd = 1 / .pt,
+    fatten = 1.2 / .pt,
+    alpha = 1.0,
+    outlier.alpha = 1.0,
+    outlier.size = dot.size,
+    outlier.shape = NA,
+    aes_(
+      fill = ~tool,
+      color = ~tool
+    )
+  ) +
+  scale_fill_manual(
+    name = "Method",
+    breaks = efficiency.pretiffied[[1]],
+    values = efficiency.pretiffied[[3]]
+  ) +
+  scale_color_manual(
+    name = "Method",
+    breaks = efficiency.pretiffied[[1]],
+    values = efficiency.pretiffied[[2]]
+  ) +
+  geom_point(
+    position = position_jitterdodge(),
+    aes_(color = ~tool),
+    size = dot.size,
+    alpha = 0.5
+  ) +
+  ylim(0, NA) +
+  labs(
+    y = "Run time (minutes)",
+    x = "Number of cells"
+  ) +
+  theme_bw() +
+  theme(
+    text = element_text(size = 7),
+    axis.text = element_text(size = 7),
+    legend.text = element_text(size = 6),
+    legend.title = element_text(size = 6),
+    legend.title.align = 0.5,
+    legend.box.spacing = unit(0.3, "mm"),
+    legend.position = "bottom",
+    legend.key.size = unit(4, 'mm'),
+    panel.grid = element_blank()
+  )
+
+efficiency.memory.plot <-
+  ggplot(
+    efficiency,
+    aes_(
+      x = ~cell_num,
+      y = ~max_rss
+    )
+  ) +
+  geom_boxplot(
+    lwd = 1 / .pt,
+    fatten = 1.2 / .pt,
+    alpha = 1.0,
+    outlier.alpha = 1.0,
+    outlier.size = dot.size,
+    outlier.shape = NA,
+    aes_(
+      fill = ~tool,
+      color = ~tool
+    )
+  ) +
+  scale_fill_manual(
+    name = "Method",
+    breaks = efficiency.pretiffied[[1]],
+    values = efficiency.pretiffied[[3]]
+  ) +
+  scale_color_manual(
+    name = "Method",
+    breaks = efficiency.pretiffied[[1]],
+    values = efficiency.pretiffied[[2]]
+  ) +
+  geom_point(
+    position = position_jitterdodge(),
+    aes_(color = ~tool),
+    size = dot.size,
+    alpha = 0.5
+  ) +
+  ylim(0, NA) +
+  labs(
+    y = "Maximum usage of physical memory (MB)",
+    x = "Number of cells"
+  ) +
+  theme_bw() +
+  theme(
+    text = element_text(size = 7),
+    axis.text = element_text(size = 7),
+    legend.text = element_text(size = 6),
+    legend.title = element_text(size = 6),
+    legend.title.align = 0.5,
+    legend.box.spacing = unit(0.3, "mm"),
+    legend.position = "bottom",
+    legend.key.size = unit(4, 'mm'),
+    panel.grid = element_blank()
+  )
+
 
 ##################################################
 #                Generate figures                #
@@ -3524,7 +5146,7 @@ ado.fallout.plot <- ggplot(
 # Figure 2
 # tree structure
 tree.plot <- ggarrange(
-  rooted.branch.score.diff.plot,
+  branch.score.diff.plot,
   normalized.rf.dist.plot,
   ncol = 2L,
   align = "h",
@@ -3612,7 +5234,7 @@ ggsave(
   dpi = 300
 )
 
-# Figure S2
+# Figure S2: parameters
 param.plot <- ggarrange(
   ggarrange(
     eff.seq.err.rate.plot,
@@ -3764,6 +5386,126 @@ figs5.plot <- ggarrange(
 ggsave(
   paste0(output.prefix, "s5.pdf"),
   plot = figs5.plot,
+  device = "pdf",
+  width = 183,
+  height = 150,
+  units = "mm",
+  dpi = 300
+)
+
+# Figure S6: tree distances with CNAs
+figs6.plot <- ggarrange(
+  branch.score.diff.cna.plot,
+  normalized.rf.dist.cna.plot,
+  ncol = 2,
+  align = "h",
+  labels = c("a", "b"),
+  font.label = list(face = "bold", size = 7),
+  common.legend = TRUE,
+  legend = "bottom",
+  legend.grob = get_legend(branch.score.diff.cna.plot)
+)
+
+ggsave(
+  paste0(output.prefix, "s6.pdf"),
+  plot = figs6.plot,
+  device = "pdf",
+  width = 183,
+  height = 75,
+  units = "mm",
+  dpi = 300
+)
+
+# Figure S7: heterozygous variant calling (with CNAs)
+figs7.plot <- ggarrange(
+  ggarrange(
+    hetero.recall.cna.plot,
+    hetero.precision.cna.plot,
+    nrow = 2,
+    align = "v",
+    labels = c("a", "b"),
+    font.label = list(face = "bold", size = 7),
+    legend = "none"
+  ),
+  ggarrange(
+    hetero.fallout.cna.plot,
+    hetero.f1.score.cna.plot,
+    nrow = 2,
+    align = "v",
+    labels = c("c", "d"),
+    font.label = list(face = "bold", size = 7),
+    legend = "none"
+  ),
+  ncol = 2,
+  align = "hv",
+  common.legend = TRUE,
+  legend = "bottom",
+  legend.grob = get_legend(hetero.recall.cna.plot)
+)
+
+ggsave(
+  paste0(output.prefix, "s7.pdf"),
+  plot = figs7.plot,
+  device = "pdf",
+  width = 183,
+  height = 150,
+  units = "mm",
+  dpi = 300
+)
+
+# Figure S8: homozygous variant calling (with CNAs)
+figs8.plot <- ggarrange(
+  ggarrange(
+    homo.recall.cna.plot,
+    homo.precision.cna.plot,
+    nrow = 2,
+    align = "v",
+    labels = c("a", "b"),
+    font.label = list(face = "bold", size = 7),
+    legend = "none"
+  ),
+  ggarrange(
+    homo.fallout.cna.plot,
+    homo.f1.score.cna.plot,
+    nrow = 2,
+    align = "v",
+    labels = c("c", "d"),
+    font.label = list(face = "bold", size = 7),
+    legend = "none"
+  ),
+  ncol = 2,
+  align = "h",
+  common.legend = TRUE,
+  legend = "bottom",
+  legend.grob = get_legend(homo.recall.cna.plot)
+)
+
+ggsave(
+  paste0(output.prefix, "s8.pdf"),
+  plot = figs8.plot,
+  device = "pdf",
+  width = 183,
+  height = 150,
+  units = "mm",
+  dpi = 300
+)
+
+# Figure S9: efficiency benchmarking
+figs9.plot <- ggarrange(
+  efficiency.time.plot,
+  efficiency.memory.plot,
+  ncol = 2,
+  align = "h",
+  labels = c("a", "b"),
+  font.label = list(face = "bold", size = 7),
+  common.legend = TRUE,
+  legend = "bottom",
+  legend.grob = get_legend(efficiency.time.plot)
+)
+
+ggsave(
+  paste0(output.prefix, "s9.pdf"),
+  plot = figs9.plot,
   device = "pdf",
   width = 183,
   height = 150,

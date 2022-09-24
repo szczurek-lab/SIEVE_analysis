@@ -27,42 +27,37 @@ prettify.colors <- function(tool.names) {
   tool.sciphi.colors <- character()
 
   tool.sieve.names <- character()
+  tool.sieve.fills <- character()
+  tool.sieve.colors <- character()
 
   predefined.colors.cellphy <- c(
     "#a0bc1d",
     "#d0e766",
-    "#CBE453",
-    "#d52eff",
-    "#a12eff"
-    )
+    "#0aad28",
+    "#0cdc32"
+  )
   predefined.colors.sifit <- c(
     "#149af2",
-    "#72c2f7",
-    "#7FC8F8",
-    "#27d81b",
-    "#096000"
-    )
+    "#72c2f7"
+  )
   predefined.colors.monovar <- c(
     "#3c5488",
-    "#7c93c5",
-    "#6681bb",
-    "#2897ff",
-    "#0000ef"
-    )
+    "#7c93c5"
+  )
   predefined.colors.sciphi <- c(
     "#c06c00",
-    "#ffab40",
-    "#ff9d20",
-    "#FF9914",
-    "#ebc90b"
-    )
+    "#ffab40"
+  )
   predefined.colors.sieve <- c(
     "#e64b35",
     "#f09285",
-    "#ed8071",
-    "#F21B3F",
-    "#ff3d3d",
-    "#c70000")
+    "#990000",
+    "#ed6e6e",
+    "#9d16ce",
+    "#bc55e1",
+    "#66267d",
+    "#8c5f9c"
+  )
 
   # cellphy, sifit, monovar, sciphi, sieve
   color.index <- c(1, 1, 1, 1, 1)
@@ -89,28 +84,31 @@ prettify.colors <- function(tool.names) {
       color.index[4] <- color.index[4] + 2
     } else if (grepl("^sieve", tool, ignore.case = TRUE)) {
       tool.sieve.names <- c(tool.sieve.names, tool)
+      tool.sieve.colors <- c(tool.sieve.colors, predefined.colors.sieve[color.index[5]])
+      tool.sieve.fills <- c(tool.sieve.fills, predefined.colors.sieve[color.index[5] + 1])
+      color.index[5] <- color.index[5] + 2
     }
   }
 
-  sorted.tool.names <- c(sorted.tool.names, tool.cellphy.names, tool.sifit.names, tool.monovar.names, tool.sciphi.names)
-  sorted.tool.colors <- c(sorted.tool.colors, tool.cellphy.colors, tool.sifit.colors, tool.monovar.colors, tool.sciphi.colors)
-  sorted.tool.fills <- c(sorted.tool.fills, tool.cellphy.fills, tool.sifit.fills, tool.monovar.fills, tool.sciphi.fills)
+  sorted.tool.names <- c(tool.cellphy.names, tool.sifit.names, tool.monovar.names, tool.sciphi.names, tool.sieve.names)
+  sorted.tool.colors <- c(tool.cellphy.colors, tool.sifit.colors, tool.monovar.colors, tool.sciphi.colors, tool.sieve.colors)
+  sorted.tool.fills <- c(tool.cellphy.fills, tool.sifit.fills, tool.monovar.fills, tool.sciphi.fills, tool.sieve.fills)
 
-  if (length(tool.sieve.names) > 0) {
-    tool.sieve.names <- sort.sieve.names(tool.sieve.names)
-    
-    if (length(tool.sieve.names) > length(predefined.colors.sieve)) {
-      stop("Short of predefined colors. Please report this bug.")
-    }
-    
-    step <- 2 * floor(length(predefined.colors.sieve) / length(tool.sieve.names))
-    
-    for (index in seq_along(tool.sieve.names)) {
-      sorted.tool.names <- c(sorted.tool.names, tool.sieve.names[index])
-      sorted.tool.colors <- c(sorted.tool.colors, predefined.colors.sieve[(index - 1) * step + 1])
-      sorted.tool.fills <- c(sorted.tool.fills, predefined.colors.sieve[(index - 1) * step + 2])
-    }
-  }
+  # if (length(tool.sieve.names) > 0) {
+  #   tool.sieve.names <- sort.sieve.names(tool.sieve.names)
+  #
+  #   if (length(tool.sieve.names) > length(predefined.colors.sieve)) {
+  #     stop("Short of predefined colors. Please report this bug.")
+  #   }
+  #
+  #   step <- 2 * floor(length(predefined.colors.sieve) / length(tool.sieve.names))
+  #
+  #   for (index in seq_along(tool.sieve.names)) {
+  #     sorted.tool.names <- c(sorted.tool.names, tool.sieve.names[index])
+  #     sorted.tool.colors <- c(sorted.tool.colors, predefined.colors.sieve[(index - 1) * step + 1])
+  #     sorted.tool.fills <- c(sorted.tool.fills, predefined.colors.sieve[(index - 1) * step + 2])
+  #   }
+  # }
   
   names(sorted.tool.colors) <- sorted.tool.names
   names(sorted.tool.fills) <- sorted.tool.names

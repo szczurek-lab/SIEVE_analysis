@@ -13,36 +13,34 @@ source(file = "magic_color.R")
 load.data <- function(
   file,
   sep = "\t",
-  data.label.name = NA,
-  data.label = NA,
-  mu.rate.name = NA,
-  mu.rate = NA
+  additional_labels = NULL
 ) {
   data <- read.table(file = file, header = TRUE, sep = sep)
 
-  if (!is.na(data.label.name) && !is.na(data.label))
-    data[data.label.name] <- data.label
+  if (!is.null(additional_labels)) {
+    stopifnot(length(additional_labels[[1]]) == length(additional_labels[[2]]))
 
-  if (!is.na(mu.rate.name) && !is.na(mu.rate))
-    data[mu.rate.name] <- mu.rate
+    for (i in seq_len(length(additional_labels[[1]]))) {
+      data[[additional_labels[[1]][i]]] <- additional_labels[[2]][i]
+    }
+  }
 
   return(data)
 }
 
 load.rds <- function(
   file,
-  data.label.name = NA,
-  data.label = NA,
-  mu.rate.name = NA,
-  mu.rate = NA
+  additional_labels = NULL
 ) {
   data <- readRDS(file = file)
 
-  if (!is.na(data.label.name) && !is.na(data.label))
-    data[[data.label.name]] <- data.label
+  if (!is.null(additional_labels)) {
+    stopifnot(length(additional_labels[[1]]) == length(additional_labels[[2]]))
 
-  if (!is.na(mu.rate.name) && !is.na(mu.rate))
-    data[[mu.rate.name]] <- mu.rate
+    for (i in seq_len(length(additional_labels[[1]]))) {
+      data[[additional_labels[[1]][i]]] <- additional_labels[[2]][i]
+    }
+  }
 
   return(data)
 }
