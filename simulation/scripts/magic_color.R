@@ -31,10 +31,10 @@ prettify.colors <- function(tool.names) {
   tool.sieve.colors <- character()
 
   predefined.colors.cellphy <- c(
-    "#a0bc1d",
-    "#d0e766",
-    "#0aad28",
-    "#0cdc32"
+    "#008169",
+    "#10b698",
+    "#00dcb5",
+    "#78f9e2"
   )
   predefined.colors.sifit <- c(
     "#149af2",
@@ -45,16 +45,16 @@ prettify.colors <- function(tool.names) {
     "#7c93c5"
   )
   predefined.colors.sciphi <- c(
-    "#c06c00",
-    "#ffab40"
+    "#ff6e3a",
+    "#f6a688"
   )
   predefined.colors.sieve <- c(
     "#e64b35",
     "#f09285",
     "#990000",
     "#ed6e6e",
-    "#9d16ce",
-    "#bc55e1",
+    "#9400e6",
+    "#c873f6",
     "#66267d",
     "#8c5f9c"
   )
